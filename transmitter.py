@@ -48,7 +48,7 @@ def play_dtmf_tone(key):
     sd.wait()  # Wait until the tone finishes playing
 
 # Play DTMF tones here
-#play_dtmf_tone('A')
+play_dtmf_tone('A')
 #play_dtmf_tone('6')
 #play_dtmf_tone('1')
 #play_dtmf_tone('3')
