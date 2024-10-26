@@ -17,7 +17,7 @@ def capture_audio(rate=44100, chunk_size=1024):
             try:
                 data = np.frombuffer(stream.read(chunk_size, exception_on_overflow=False), dtype=np.int16)
                 yield data
-                print(data) #Tester hvad vi får
+                #print(data) #Tester hvad vi får
             except IOError:
                 # Handle buffer overflow or other I/O errors
                 continue
