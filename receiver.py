@@ -1,8 +1,35 @@
-import pyaudio
+import pyaudio #to Capture audio
 import numpy as np
-from scipy.fft import fft, fftfreq
-import time
+from scipy.fft import fft, fftfreq #Fast Fourirer transfrom
+from scipy.signal import butter, lfilter #butterworth filter
+import time #time
+import matplotlib.pyplot as plt #Plotting
 
+#Plotting
+def plot_frequency_domain(frequencies, magnitude):
+    plt.figure()
+    plt.plot(frequencies, magnitude)
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Magnitude')
+    plt.title('Frequency Domain Representation of Audio Data')
+    plt.xlim([0, 2000])
+    plt.show()
+#Plotting end
+
+#Butterworth Highpass filter 
+def butter_highpass(cutoff, fs, order = 8): #8th order
+    nyquist = 0.5 * fs
+    high = cutoff / nyquist
+    b, a = butter(order, high, btype='high')
+    return b, a
+
+def apply_highpass_filter(data, cutoff, fs, order = 8): #8th order
+    b, a = butter_highpass(cutoff, fs, order=order)
+    filtered_data = lfilter(b, a, data)
+    return filtered_data
+
+
+#Function to capture audio using PyAudio that uses PortAudio
 def capture_audio(rate=44100, chunk_size=1024):
     audio = pyaudio.PyAudio()
     stream = audio.open(format=pyaudio.paInt16,
@@ -61,17 +88,29 @@ def identify_dtmf(frequencies, magnitude):
 def receiver():
     rate = 44100  # Sample rate
     chunk_size = 1024  # Audio chunk size #With this sample rate and audio chuck size we measure every 23.2 milliseconds (Chuncksize/Samplerate = time per chunck)
+    cutoff = 675 #High pass cutoff frequency (slighlty lower than the lowest dtmf tone)
     last_detected = None
     debounce_time = 0.5  # seconds
 
     for audio_chunk in capture_audio(rate, chunk_size):
+        #Apply high pass butter worth filter
+        filtered_chunck = apply_highpass_filter(audio_chunk, cutoff, rate)
+
+        #Analyze frequencies
         frequencies, magnitude = analyze_frequency(audio_chunk, rate)
+
+        #Identify DTMF tone
         dtmf_tone = identify_dtmf(frequencies, magnitude)
 
         if dtmf_tone and dtmf_tone != last_detected:
             print(f"Detected DTMF Tone: {dtmf_tone}")
             last_detected = dtmf_tone
             last_time = time.time()
+
+            #Plot the frequency domain after a tone
+            #ONLY USE FOR DEBUG
+            #plot_frequency_domain(frequencies, magnitude)
+
         elif last_detected and (time.time() - last_time) > debounce_time:
             last_detected = None
 
