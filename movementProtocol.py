@@ -4,6 +4,8 @@ from scipy.fft import fft, fftfreq
 import time
 import pyaudio
 
+global_timeout = 3
+
 # FUNCTIONS
 # FUNCTIONS
 # FUNCTIONS
@@ -24,6 +26,10 @@ dtmf_frequencies = {
     '*': (941, 1209), # ACK
     '0': (941, 1336),
     '#': (941, 1477), # Hello
+    'A': (697, 1633),
+    'B': (770, 1633),
+    'C': (852, 1633),
+    'D': (941, 1633),
 }
 
 # Sampling parameters
@@ -47,7 +53,7 @@ def generate_dtmf_tone(key, duration=0.5, sample_rate=44100):
 # Function to play the DTMF tone
 def play_dtmf_tone(key):
     tone = generate_dtmf_tone(key, duration, sample_rate)
-    print("Playing audio")
+    print(f"Playing audio: {key}")
     # Play the generated tone
     sd.play(tone, sample_rate)
     sd.wait()  # Wait until the tone finishes playing
@@ -91,7 +97,9 @@ def identify_dtmf(frequencies, magnitude):
         (697, 1209): '1', (697, 1336): '2', (697, 1477): '3',
         (770, 1209): '4', (770, 1336): '5', (770, 1477): '6',
         (852, 1209): '7', (852, 1336): '8', (852, 1477): '9',
-        (941, 1209): '*', (941, 1336): '0', (941, 1477): '#'
+        (941, 1209): '*', (941, 1336): '0', (941, 1477): '#',
+        (697, 1633): 'A', (770, 1633): 'B', (852, 1633): 'C',
+        (941, 1633): 'D'
     }
 
     # Find the two highest magnitudes
@@ -107,15 +115,16 @@ def identify_dtmf(frequencies, magnitude):
     return None
 
 # Listen for a specific DTMF tone or timeout and replay if not found
-def listen_for_ack():
+def listen_for_ack(some_DTMF, ack_tone = '*', number_of_attempts = 5):
     rate = 44100
     chunk_size = 1024
-    timeout_duration = 3  # Time to wait for "ACK" tone
-    ack_tone = '*'  # DTMF tone to represent "ACK"
-
+    timeout_duration = global_timeout  # Time to wait for "ACK" tone
+    counter = 0
+    
     while True:
         start_time = time.time()
         acknowledged = False
+
 
         print("Listening for ACK tone...")
         for audio_chunk in capture_audio(rate, chunk_size):
@@ -125,7 +134,7 @@ def listen_for_ack():
             if dtmf_tone == ack_tone:
                 print("ACK received!")
                 acknowledged = True
-                break
+                return True
 
             # Timeout check
             if time.time() - start_time > timeout_duration:
@@ -135,13 +144,67 @@ def listen_for_ack():
             time.sleep(0.01)
 
         if not acknowledged:
-            play_dtmf_tone("#")  # Replay DTMF tone '#'
+            counter += 1
+            if(counter >= number_of_attempts):
+                print(f"Didn't receive ACK back in {number_of_attempts} attepmts. Shutting down.")
+                return False
+            else:
+                play_dtmf_tone(some_DTMF)  # Replay DTMF tone
+
 
 
 def hello():
     play_dtmf_tone("#") # Wake-up signal
     time.sleep(0.5) 
-    listen_for_ack()
+    bool_received_ack = listen_for_ack("#")
+    return bool_received_ack
+
+def movementBlock():
+    block = input("Enter a movement block: ")
+    block_list = list(block)
+    for i in block_list:
+        play_dtmf_tone(i)
+    return block
+
+# Listen for a specific sequence of DTMF tones
+def listen_for_sequence(sequence, max_retries=4):
+    rate = 44100
+    chunk_size = 1024
+    timeout_duration = global_timeout  # Max time to wait for each tone in the sequence
+
+    for attempt in range(max_retries):
+        start_time = time.time()
+        sequence_index = 0
+
+        print(f"Attempt {attempt + 1} of {max_retries} to detect sequence: {sequence}")
+        
+        for audio_chunk in capture_audio(rate, chunk_size):
+            frequencies, magnitude = analyze_frequency(audio_chunk, rate)
+            dtmf_tone = identify_dtmf(frequencies, magnitude)
+
+            # Check for the correct tone in sequence
+            if dtmf_tone == sequence[sequence_index]:
+                print(f"Detected tone: {dtmf_tone}")
+                sequence_index += 1
+
+                # If the entire sequence is detected
+                if sequence_index == len(sequence):
+                    print("Sequence detected successfully!")
+                    return True
+
+            # Check for timeout
+            if time.time() - start_time > timeout_duration:
+                print("Timeout reached. Restarting sequence detection.")
+                break  # Exit current attempt and restart
+
+            # Reset start_time if we detect a tone (keeps waiting time per tone)
+            if dtmf_tone:
+                start_time = time.time()
+
+            time.sleep(0.01)  # Reduce CPU usage
+
+    print("Failed to detect sequence within retries.")
+    return False  # Return false if sequence isn't detected after max_retries
 
 # CODE
 # CODE
@@ -150,12 +213,19 @@ def hello():
 # CODE
 
 # SETUP PHASE
-
+print("Welcome to the Robot Movment Block Protocol R.M.B.P.")
+print("Enter a movement block after the wake-up-call like this: 2A1*5")
 
 # Main function to play tone and listen for DTMF tones
 def main():
-    hello()
-    
+    bool_ack = hello() # Send a hello signal and wait for response
+
+    if(bool_ack): # If response is received
+        rblock = movementBlock() # Ask user to enter DTMF tones
+        listen_for_sequence(rblock)
+
+
+
 
 # Run the main function
 if __name__ == "__main__":
