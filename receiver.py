@@ -33,18 +33,22 @@ def plot_filter_response(cutoff, fs, order=4):
     
 #Plotting end
 
-
-#Butterworth Highpass filter 
-def butter_highpass(data, cutoff, fs, order = 2): #8th order
+#Butterworth Bandpass filter
+def butter_bandpass(data, cutoff, stopoff, fs, order = 6): #4th order
     nyquist = 0.5 * fs
-    high = cutoff / nyquist
-    b, a = butter(order, high, btype='highpass', analog=False)
+    high = stopoff / nyquist
+    low = cutoff / nyquist
+    b, a = butter(order,[low, high], btype='bandpass')
     filtered_data = lfilter(b,a,data)
     return filtered_data
 
-#def apply_highpass_filter(data, cutoff, fs, order = 8): #8th order
-#    b, a = butter_highpass(cutoff, fs, order=order)
-#    filtered_data = lfilter(b, a, data)
+
+#Butterworth Highpass filter 
+#def butter_highpass(data, cutoff, fs, order = 2): #2nd order?
+#    nyquist = 0.5 * fs
+#    high = cutoff / nyquist
+#    b, a = butter(order, high, btype='highpass', analog=False)
+#    filtered_data = lfilter(b,a,data)
 #    return filtered_data
 
 
@@ -114,14 +118,18 @@ def identify_dtmf(frequencies, magnitude):
 def receiver():
     rate = 44100  # Sample rate
     chunk_size = 1024  # Audio chunk size #With this sample rate and audio chuck size we measure every 23.2 milliseconds (Chuncksize/Samplerate = time per chunck)
-    cutoff = 675 #High pass cutoff frequency (slighlty lower than the lowest dtmf tone)
+    cutoff = 650 #High pass cutoff frequency (slighlty lower than the lowest dtmf tone)
+    stopoff = 1800 #Stopoff for bandpass
     last_detected = None
     debounce_time = 0.5  # seconds default 0.5 seconds
     #Future maybe do more readings then sending and then average out before giving output
 
     for audio_chunk in capture_audio(rate, chunk_size):
+        #Apply band pass butterworth filter
+        filtered_chunk = butter_bandpass(audio_chunk, cutoff, stopoff, rate)
+
         #Apply high pass butter worth filter
-        filtered_chunk = butter_highpass(audio_chunk, cutoff, rate)
+        #filtered_chunk = butter_highpass(audio_chunk, cutoff, rate)
 
         #Analyze frequencies
     
