@@ -23,10 +23,10 @@ dtmf_frequencies = {
 
 # Sampling parameters
 sample_rate = 44100  # Standard audio sample rate (44.1 kHz)
-duration = 0.5       # Tone duration in seconds
+duration = 0.5       # Tone duration in seconds Defualt = 0.5
 
 # Function to generate DTMF tone for a key
-def generate_dtmf_tone(key, duration=0.5, sample_rate=44100):
+def generate_dtmf_tone(key, duration, sample_rate):
     if key not in dtmf_frequencies:
         raise ValueError(f"Invalid DTMF key: {key}")
 
@@ -47,13 +47,24 @@ def play_dtmf_tone(key):
     sd.play(tone, sample_rate)
     sd.wait()  # Wait until the tone finishes playing
 
+def play_all_dtmf_tones():
+    play_dtmf_tone('A')
+    play_dtmf_tone('B')
+    play_dtmf_tone('C')
+    play_dtmf_tone('D')
+    play_dtmf_tone('1')
+    play_dtmf_tone('2')
+    play_dtmf_tone('3')
+    play_dtmf_tone('4')
+    play_dtmf_tone('5')
+    play_dtmf_tone('6')
+    play_dtmf_tone('7')
+    play_dtmf_tone('8')
+    play_dtmf_tone('9')
+    play_dtmf_tone('*')
+    play_dtmf_tone('#')
+
+
 # Play DTMF tones here
 play_dtmf_tone('A')
-#play_dtmf_tone('2')
-#play_dtmf_tone('9')
-#play_dtmf_tone('7')
-#play_dtmf_tone('1')
-#play_dtmf_tone('5')
-#play_dtmf_tone('0')
-#play_dtmf_tone('9')
-#play_dtmf_tone('4') 
+#play_all_dtmf_tones()
