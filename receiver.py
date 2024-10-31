@@ -17,16 +17,17 @@ def plot_frequency_domain(frequencies, magnitude):
 #Plotting end
 
 #Butterworth Highpass filter 
-def butter_highpass(cutoff, fs, order = 8): #8th order
+def butter_highpass(data, cutoff, fs, order = 8): #8th order
     nyquist = 0.5 * fs
     high = cutoff / nyquist
     b, a = butter(order, high, btype='high')
-    return b, a
-
-def apply_highpass_filter(data, cutoff, fs, order = 8): #8th order
-    b, a = butter_highpass(cutoff, fs, order=order)
-    filtered_data = lfilter(b, a, data)
+    filtered_data = lfilter(b,a,data)
     return filtered_data
+
+#def apply_highpass_filter(data, cutoff, fs, order = 8): #8th order
+#    b, a = butter_highpass(cutoff, fs, order=order)
+#    filtered_data = lfilter(b, a, data)
+#    return filtered_data
 
 
 #Function to capture audio using PyAudio that uses PortAudio
@@ -94,10 +95,14 @@ def receiver():
 
     for audio_chunk in capture_audio(rate, chunk_size):
         #Apply high pass butter worth filter
-        filtered_chunck = apply_highpass_filter(audio_chunk, cutoff, rate)
+        filtered_chunck = butter_highpass(audio_chunk, cutoff, rate)
 
         #Analyze frequencies
-        frequencies, magnitude = analyze_frequency(audio_chunk, rate)
+    
+        frequencies, magnitude = analyze_frequency(filtered_chunck, rate) #Filtered chunck her for brug af filter og audio_chunck hvis uden filter
+
+        #Only used for debugging
+        #raw_frequencies, raw_magnitude = analyze_frequency(audio_chunk, rate)
 
         #Identify DTMF tone
         dtmf_tone = identify_dtmf(frequencies, magnitude)
@@ -109,7 +114,8 @@ def receiver():
 
             #Plot the frequency domain after a tone
             #ONLY USE FOR DEBUG
-            #plot_frequency_domain(frequencies, magnitude)
+            #plot_frequency_domain(raw_frequencies, raw_magnitude)
+            plot_frequency_domain(frequencies, magnitude)
 
         elif last_detected and (time.time() - last_time) > debounce_time:
             last_detected = None
