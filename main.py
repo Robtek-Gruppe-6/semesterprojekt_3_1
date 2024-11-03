@@ -2,11 +2,12 @@ import time #time
 
 from control import *
 #from communication import * Magnuses movement protokol
-from decoding import *
+from decoding import decoder
 from filter import *
 from speaker import *
 from microphone import *
 from plotting import *
+
 
 def receiver():
     rate = 44100  # Sample rate
@@ -16,6 +17,7 @@ def receiver():
     last_detected = None
     debounce_time = 0.5  # seconds default 0.5 seconds
     #Future maybe do more readings then sending and then average out before giving output
+    
 
     for audio_chunk in capture_audio(rate, chunk_size):
         #Apply band pass butterworth filter
@@ -32,7 +34,7 @@ def receiver():
         raw_frequencies, raw_magnitude = analyze_frequency(audio_chunk, rate)
 
         #Identify DTMF tone
-        dtmf_tone = identify_dtmf(frequencies, magnitude)
+        dtmf_tone = decoder.identify_dtmf(frequencies, magnitude)
 
         if dtmf_tone and dtmf_tone != last_detected:
             print(f"Detected DTMF Tone: {dtmf_tone}")
