@@ -1,6 +1,5 @@
 import numpy as np
 from filter import fil
-from microphone import micro
 from plotting import plot
 import time #time
 
