@@ -5,13 +5,12 @@ from control import *
 from decoding import decoder
 from filter import *
 from speaker import *
-from microphone import *
+from microphone import micro
 from plotting import *
 
 
 def receiver():
     rate = 44100  # Sample rate
-    chunk_size = 1024  # Audio chunk size #With this sample rate and audio chuck size we measure every 23.2 milliseconds (Chuncksize/Samplerate = time per chunck)
     cutoff = 650 #High pass cutoff frequency (slighlty lower than the lowest dtmf tone)
     stopoff = 1800 #Stopoff for bandpass
     last_detected = None
@@ -19,7 +18,7 @@ def receiver():
     #Future maybe do more readings then sending and then average out before giving output
     
 
-    for audio_chunk in capture_audio(rate, chunk_size):
+    for audio_chunk in micro.capture_audio():
         #Apply band pass butterworth filter
         filtered_chunk = butter_bandpass(audio_chunk, cutoff, stopoff, rate)
 
