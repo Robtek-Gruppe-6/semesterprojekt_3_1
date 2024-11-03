@@ -66,5 +66,5 @@ def play_all_dtmf_tones():
 
 
 # Play DTMF tones here
-play_dtmf_tone('A')
+#play_dtmf_tone('A')
 #play_all_dtmf_tones()
