@@ -3,7 +3,7 @@ import time #time
 from control import *
 #from communication import * Magnuses movement protokol
 from decoding import decoder
-from filter import *
+from filter import fil
 from speaker import spk
 from microphone import micro
 from plotting import *
@@ -20,17 +20,17 @@ def receiver():
 
     for audio_chunk in micro.capture_audio():
         #Apply band pass butterworth filter
-        filtered_chunk = butter_bandpass(audio_chunk, cutoff, stopoff, rate)
+        filtered_chunk = fil.butter_bandpass(audio_chunk, cutoff, stopoff, rate)
 
         #Apply high pass butter worth filter
         #filtered_chunk = butter_highpass(audio_chunk, cutoff, rate)
 
         #Analyze frequencies
     
-        frequencies, magnitude = analyze_frequency(filtered_chunk, rate) #Filtered chunck her for brug af filter og audio_chunck hvis uden filter
+        frequencies, magnitude = fil.analyze_frequency(filtered_chunk, rate) #Filtered chunck her for brug af filter og audio_chunck hvis uden filter
 
         #Only used for debugging
-        raw_frequencies, raw_magnitude = analyze_frequency(audio_chunk, rate)
+        raw_frequencies, raw_magnitude = fil.analyze_frequency(audio_chunk, rate)
 
         #Identify DTMF tone
         dtmf_tone = decoder.identify_dtmf(frequencies, magnitude)
