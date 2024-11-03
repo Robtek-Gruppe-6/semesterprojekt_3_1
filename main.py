@@ -6,7 +6,7 @@ from decoding import decoder
 from filter import *
 from speaker import spk
 from microphone import micro
-from plotting import *
+from plotting import plot
 
 
 def receiver():
@@ -43,7 +43,7 @@ def receiver():
             #Plot the frequency domain after a tone
             #ONLY USE FOR DEBUG
             #plot_frequency_domain(raw_frequencies, raw_magnitude)
-            #plot_frequency_domain(frequencies, magnitude)
+            plot.frequency_domain(frequencies, magnitude)
             #plot_filter_response(cutoff, rate)
 
         elif last_detected and (time.time() - last_time) > debounce_time:
