@@ -4,7 +4,7 @@ from control import *
 #from communication import * Magnuses movement protokol
 from decoding import decoder
 from filter import *
-from speaker import *
+from speaker import spk
 from microphone import *
 from plotting import *
 
@@ -54,6 +54,7 @@ def receiver():
 
 if __name__ == "__main__":
     receiver()
+    
 
 
 
