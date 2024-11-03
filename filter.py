@@ -3,15 +3,19 @@ from scipy.fft import fft, fftfreq #Fast Fourirer transfrom
 import numpy as np
 
 class Filter:
-    def __init__(self, order = 6): #Default order is set to 6
+    def __init__(self, order = 6, rate=44100, cutoff=650, stopoff=1800): 
         # Default filter order can be overridden
-        self.order = order
+        self.order = order #Default order is set to 6
+        self.rate = rate # Sample rate
+        self.cutoff = cutoff #High pass cutoff frequency (slighlty lower than the lowest dtmf tone)
+        self.stopoff = stopoff #Stopoff for bandpass
+
 
     #Bandpass filter using Butterworth design
-    def butter_bandpass(self, data, cutoff, stopoff, fs): 
-        nyquist = 0.5 * fs
-        high = stopoff / nyquist
-        low = cutoff / nyquist
+    def butter_bandpass(self, data): 
+        nyquist = 0.5 * self.rate
+        high = self.stopoff / nyquist
+        low = self.cutoff / nyquist
         b, a = butter(self.order,[low, high], btype='bandpass')
         filtered_data = lfilter(b,a,data)
         return filtered_data
