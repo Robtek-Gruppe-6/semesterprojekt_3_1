@@ -30,13 +30,12 @@ class Filter:
 
 
     #Frequency analysis using FFT
-    @staticmethod
-    def analyze_frequency(data, rate):
+    def analyze_frequency(self, data):
         window = np.hamming(len(data))
         data_windowed = data * window
         N = len(data_windowed)
         yf = fft(data_windowed)
-        xf = fftfreq(N, 1 / rate)
+        xf = fftfreq(N, 1 / self.rate)
 
         positive_frequencies = xf[:N // 2]
         magnitude = np.abs(yf[:N // 2])

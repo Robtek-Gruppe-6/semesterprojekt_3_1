@@ -1,7 +1,11 @@
 import numpy as np
+from filter import fil
+from microphone import micro
+from plotting import plot
+import time #time
 
 class Decoding:
-    def __init__(self, magnitude_threshold=50000, frequency_tolerance=20):
+    def __init__(self, debounce_time = 0.5, magnitude_threshold = 100000, frequency_tolerance = 20, last_detected = None, last_time = None):
         # Define DTMF frequency pairs with their corresponding digits
         self.dtmf_freqs = {
             (697, 1209): '1', (697, 1336): '2', (697, 1477): '3', (697, 1633): 'A',
@@ -11,6 +15,10 @@ class Decoding:
         }
         self.magnitude_threshold = magnitude_threshold  # Minimum magnitude to avoid noise detection
         self.frequency_tolerance = frequency_tolerance  # Allowed tolerance for frequency matching
+        self.fil = fil
+        self.debounce_time = debounce_time
+        self.last_detected = last_detected
+        self.last_time = last_time
 
 
         
@@ -32,4 +40,34 @@ class Decoding:
                     return digit
         return None
     
+    def process_chunk(self, frequencies, magnitude):
+        
+            #Apply band pass butterworth filter
+            #filtered_chunk = fil.butter_bandpass(audio_chunk)
+
+            #Analyze frequencies
+            #frequencies, magnitude = fil.analyze_frequency(filtered_chunk) #Filtered chunck her for brug af filter og audio_chunck hvis uden filter
+
+            #Only used for debugging
+            #raw_frequencies, raw_magnitude = fil.analyze_frequency(audio_chunk, fil.rate)
+
+            #Identify DTMF tone
+            dtmf_tone = self.identify_dtmf(frequencies, magnitude)
+
+            if dtmf_tone and dtmf_tone != self.last_detected:
+                print(f"Detected DTMF Tone: {dtmf_tone}") #Det her kunne godt tænkes at være i application layer, da de jo printer til UI
+                self.last_detected = dtmf_tone
+                self.last_time = time.time()
+
+                #Plot the frequency domain after a tone
+                #ONLY USE FOR DEBUG
+                #plot_frequency_domain(raw_frequencies, raw_magnitude)
+                plot.frequency_domain(frequencies, magnitude)
+                #plot_filter_response(cutoff, rate)
+
+            elif self.last_detected and (time.time() - self.last_time) > self.debounce_time:
+                self.last_detected = None
+
+            time.sleep(0.01)  # Sleep to reduce CPU usage
+      
 decoder = Decoding() #Laver instans til main
