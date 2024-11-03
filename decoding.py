@@ -61,7 +61,7 @@ class Decoding:
                 #Plot the frequency domain after a tone
                 #ONLY USE FOR DEBUG
                 #plot_frequency_domain(raw_frequencies, raw_magnitude)
-                plot.frequency_domain(frequencies, magnitude)
+                #plot.frequency_domain(frequencies, magnitude)
                 #plot_filter_response(cutoff, rate)
 
             elif self.last_detected and (time.time() - self.last_time) > self.debounce_time:
