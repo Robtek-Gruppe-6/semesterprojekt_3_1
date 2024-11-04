@@ -67,7 +67,7 @@ class TerminalUI:
             #Ensure the terminal is reset even if an error occurs
             self.stop_ui()
             
-    def run_protocol(self):
+    def run_protocol(self): #Runs the protocol but in the background instead of inside of the UI.
         self.start_ui()
         try:
             #Display the protocol menu
