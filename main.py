@@ -5,6 +5,7 @@ from filter import fil
 from speaker import spk
 from microphone import micro
 from plotting import plot
+from UI import ui
 
 
 def main():
@@ -23,6 +24,7 @@ def main():
 
 
 if __name__ == "__main__":
+    #ui.run_example() #UI example code
     main()
     
 
