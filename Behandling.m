@@ -1,7 +1,7 @@
 clear all;
 
 % Load the CSV file
-audio_data = csvread('audio_data(2).csv');
+audio_data = csvread('audio_data.csv');
 
 % Flatten the matrix into a single vector
 audio_data_flattened = audio_data(:);  % Convert the matrix to a single column vector
