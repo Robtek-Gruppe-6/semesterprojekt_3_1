@@ -1,4 +1,4 @@
-# semesterprojekt_3_6
+# DTMF Controlled Robot Protocol Group 6 ROBTEK Semester 3 SDU
 
 ## Setup
 To run the code you need to have the following packages
