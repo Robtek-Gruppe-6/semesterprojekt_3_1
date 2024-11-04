@@ -7,7 +7,7 @@ pyaudio
 numpy 
 scipy
 matplotlib
-curses (If linux)
+curses (If linux) Should be installed by default
 windows-curses (if windows)
 
 ### For Linux
@@ -17,7 +17,6 @@ pip install sounddevice
 pip install scipy
 pip install pyaudio
 pip install matplotlib
-pip install curses
 ```
 ### For Windows
 ```
