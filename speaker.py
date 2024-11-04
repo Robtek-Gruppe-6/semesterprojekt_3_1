@@ -56,7 +56,7 @@ class Speaker:
 
     def play_all_dtmf_tones(self):
         for key in self.dtmf_frequencies:
-            self.play_all_dtmf_tones(key)
+            self.play_dtmf_tone(key)
 
 
     # Play DTMF tones here
