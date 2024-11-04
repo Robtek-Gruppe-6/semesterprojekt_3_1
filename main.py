@@ -25,6 +25,7 @@ def main():
 
 if __name__ == "__main__":
     #ui.run_example() #UI example code
+    #ui.run_protocol() #Runs the movementProtocol but it needs to display that into the UI SO NOT DONE!
     main()
     
 

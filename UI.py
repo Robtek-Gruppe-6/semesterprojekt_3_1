@@ -1,5 +1,6 @@
 import curses
 import time
+from movementProtocol import main as run_movement_protocol
 
 class TerminalUI:
     #Class variables
@@ -65,5 +66,20 @@ class TerminalUI:
         finally:
             #Ensure the terminal is reset even if an error occurs
             self.stop_ui()
+            
+    def run_protocol(self):
+        self.start_ui()
+        try:
+            #Display the protocol menu
+            self.display_menu("Welcome to the Robot Movement Block Protocol R.M.B.P", ["Run"])
+            choice = self.get_user_choice(1)
+            if choice == 1:
+                self.run_movement_protocol()
+        finally:
+            #Ensure the terminal is reset even if an error occurs
+            self.stop_ui()
+            
+    def run_movement_protocol(self):
+        run_movement_protocol()
             
 ui = TerminalUI() #Initialize the UI
