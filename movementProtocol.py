@@ -206,11 +206,21 @@ def listen_for_sequence(sequence, max_retries=4):
     print("Failed to detect sequence within retries.")
     return False  # Return false if sequence isn't detected after max_retries
 
+
+def repeat_after_me(bool_ack):
+    if(bool_ack): # If response is received
+        rblock = movementBlock() # Ask user to enter DTMF tones
+        bool_sqn = listen_for_sequence(rblock)
+        if(bool_sqn):
+            play_dtmf_tone("*")
+        else:
+            print("Error.")
+
+# 
+# 
 # CODE
-# CODE
-# CODE
-# CODE
-# CODE
+# 
+# 
 
 # SETUP PHASE
 print("Welcome to the Robot Movment Block Protocol R.M.B.P.")
@@ -219,10 +229,8 @@ print("Enter a movement block after the wake-up-call like this: 2A1*5")
 # Main function to play tone and listen for DTMF tones
 def main():
     bool_ack = hello() # Send a hello signal and wait for response
-
-    if(bool_ack): # If response is received
-        rblock = movementBlock() # Ask user to enter DTMF tones
-        listen_for_sequence(rblock)
+    repeat_after_me(bool_ack) # Ask user to write commands
+        
 
 
 
