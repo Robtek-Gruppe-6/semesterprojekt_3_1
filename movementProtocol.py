@@ -4,7 +4,11 @@ from scipy.fft import fft, fftfreq
 import time
 import pyaudio
 
-global_timeout = 3
+# Sampling parameters
+sample_rate = 44100
+chunk_size = 1024
+timeout_duration = 5  # Max time to wait for each tone in the sequence
+duration = 0.5       # Tone duration in seconds
 
 # FUNCTIONS
 # FUNCTIONS
@@ -25,16 +29,14 @@ dtmf_frequencies = {
     '9': (852, 1477),
     '*': (941, 1209), # ACK
     '0': (941, 1336),
-    '#': (941, 1477), # Hello
-    'A': (697, 1633),
-    'B': (770, 1633),
-    'C': (852, 1633),
-    'D': (941, 1633),
+    '#': (941, 1477), # Hello and comma
+    'A': (697, 1633), # Positive (maybe redundant)
+    'B': (770, 1633), # Negative (maybe redundant)
+    'C': (852, 1633), # Change orientation mode
+    'D': (941, 1633), # Drive mode
 }
 
-# Sampling parameters
-sample_rate = 44100  # Standard audio sample rate (44.1 kHz)
-duration = 0.5       # Tone duration in seconds
+
 
 # Function to generate DTMF tone for a key
 def generate_dtmf_tone(key, duration=0.5, sample_rate=44100):
@@ -116,9 +118,6 @@ def identify_dtmf(frequencies, magnitude):
 
 # Listen for a specific DTMF tone or timeout and replay if not found
 def listen_for_ack(some_DTMF, ack_tone = '*', number_of_attempts = 5):
-    rate = 44100
-    chunk_size = 1024
-    timeout_duration = global_timeout  # Time to wait for "ACK" tone
     counter = 0
     
     while True:
@@ -127,8 +126,8 @@ def listen_for_ack(some_DTMF, ack_tone = '*', number_of_attempts = 5):
 
 
         print("Listening for ACK tone...")
-        for audio_chunk in capture_audio(rate, chunk_size):
-            frequencies, magnitude = analyze_frequency(audio_chunk, rate)
+        for audio_chunk in capture_audio(sample_rate, chunk_size):
+            frequencies, magnitude = analyze_frequency(audio_chunk, sample_rate)
             dtmf_tone = identify_dtmf(frequencies, magnitude)
 
             if dtmf_tone == ack_tone:
@@ -168,9 +167,6 @@ def movementBlock():
 
 # Listen for a specific sequence of DTMF tones
 def listen_for_sequence(sequence, max_retries=4):
-    rate = 44100
-    chunk_size = 1024
-    timeout_duration = global_timeout  # Max time to wait for each tone in the sequence
 
     for attempt in range(max_retries):
         start_time = time.time()
@@ -178,8 +174,8 @@ def listen_for_sequence(sequence, max_retries=4):
 
         print(f"Attempt {attempt + 1} of {max_retries} to detect sequence: {sequence}")
         
-        for audio_chunk in capture_audio(rate, chunk_size):
-            frequencies, magnitude = analyze_frequency(audio_chunk, rate)
+        for audio_chunk in capture_audio(sample_rate, chunk_size):
+            frequencies, magnitude = analyze_frequency(audio_chunk, sample_rate)
             dtmf_tone = identify_dtmf(frequencies, magnitude)
 
             # Check for the correct tone in sequence
@@ -216,6 +212,21 @@ def repeat_after_me(bool_ack):
         else:
             print("Error.")
 
+def listen_for_hello(hello_signal="#"):
+
+    print(f"Waiting for 'hello' signal: {hello_signal}")
+
+    for audio_chunk in capture_audio(sample_rate, chunk_size):
+        frequencies, magnitude = analyze_frequency(audio_chunk, sample_rate)
+        dtmf_tone = identify_dtmf(frequencies, magnitude)
+
+        # Check if the detected tone matches the hello signal
+        if dtmf_tone == hello_signal:
+            print("Hello signal detected!")
+            return True
+
+        time.sleep(0.01)  # Reduce CPU usage
+
 # 
 # 
 # CODE
@@ -225,11 +236,13 @@ def repeat_after_me(bool_ack):
 # SETUP PHASE
 print("Welcome to the Robot Movment Block Protocol R.M.B.P.")
 print("Enter a movement block after the wake-up-call like this: 2A1*5")
+bool_ack = hello() # Send a hello signal and wait for response
 
 # Main function to play tone and listen for DTMF tones
 def main():
-    bool_ack = hello() # Send a hello signal and wait for response
-    repeat_after_me(bool_ack) # Ask user to write commands
+    while(True):
+        repeat_after_me(bool_ack) # Ask user to write commands
+        bool_ack = listen_for_hello()
         
 
 
