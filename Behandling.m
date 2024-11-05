@@ -1,7 +1,7 @@
 clear all;
 
 % Load the CSV file
-audio_data = csvread('audio_data(2).csv');
+audio_data = csvread('audio_data.csv');
 
 % Flatten the matrix into a single vector
 audio_data_flattened = audio_data(:);  % Convert the matrix to a single column vector
@@ -40,12 +40,12 @@ hamming_window = hamming(chunk_size);
 for i = 1:num_chunks
     % Get the current chunk
     current_chunk = audio_data(i,:);
-
+    
     filtered_chunk = filter(b, a, current_chunk);
     
-    %Hamming ser ud til at 'flade 
+    %Hamming ser ud til at 'flade
     windowed_chunk = filtered_chunk .*hamming_window.';
-
+    
     % Current chunk hvis uden hamming ellers windowed
     fft_result = fft(windowed_chunk);
     
