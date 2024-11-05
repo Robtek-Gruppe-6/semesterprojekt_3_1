@@ -1,12 +1,14 @@
 import curses
 import time
-from movementProtocol import main as run_movement_protocol
+#from movementProtocol import main as run_movement_protocol
+from control import Control
 
 class TerminalUI:
     #Class variables
     
     def __init__(self):
         self.screen = None
+        self.control = Control()
         
     
     def start_ui(self):
@@ -42,7 +44,7 @@ class TerminalUI:
                 choice = key - ord('0') #Convert ASCII to number
         return choice
     
-    def display_messeage(self, message, wait_seconds = 2):
+    def display_message(self, message, wait_seconds = 2):
         self.screen.clear()
         self.screen.addstr(1, 2, message)
         self.screen.refresh()
@@ -56,30 +58,40 @@ class TerminalUI:
         self.start_ui()
         try:
             #Display a sample menu
-            self.display_menu("Main Menu", ["Option 1", "Option 2", "Option 3", "Quit"])
+            self.display_menu("Main Menu", ["Drive Mode", "Rotate Mode", "Option 3", "Quit"])
             choice = self.get_user_choice(4)
             if choice == 4:
-                self.display_messeage("Exiting...")
+                self.display_message("Exiting...")
+            elif choice == 1:
+                self.display_message("Enter distance for Drive Mode:")
+                curses.echo()
+                distance = int(self.screen.getstr(3, 4, 10).decode('utf-8'))
+                curses.noecho()
+                self.control.drive_mode(distance)
+                self.display_message(f"Drive Mode activated with distance: {distance}")
+            elif choice == 2:
+                self.control.rotate_mode()
+                self.display_message("Rotate Mode activated")
             else:
-                self.display_messeage(f"You selected Option {choice}")
-                
+                self.display_message("Option 3 selected")
         finally:
             #Ensure the terminal is reset even if an error occurs
             self.stop_ui()
             
-    def run_protocol(self): #Runs the protocol but in the background instead of inside of the UI.
-        self.start_ui()
-        try:
-            #Display the protocol menu
-            self.display_menu("Welcome to the Robot Movement Block Protocol R.M.B.P", ["Run"])
-            choice = self.get_user_choice(1)
-            if choice == 1:
-                self.run_movement_protocol()
-        finally:
-            #Ensure the terminal is reset even if an error occurs
-            self.stop_ui()
+    #def run_protocol(self): #Runs the protocol but in the background instead of inside of the UI.
+    #    self.start_ui()
+    #    try:
+    #        #Display the protocol menu
+    #        self.display_menu("Welcome to the Robot Movement Block Protocol R.M.B.P", ["Run"])
+    #        choice = self.get_user_choice(1)
+    #        if choice == 1:
+    #            self.run_movement_protocol()
+    #    finally:
+    #        #Ensure the terminal is reset even if an error occurs
+    #        self.stop_ui()
+    #        
+    #def run_movement_protocol(self):
+    #    run_movement_protocol()
             
-    def run_movement_protocol(self):
-        run_movement_protocol()
             
 ui = TerminalUI() #Initialize the UI
