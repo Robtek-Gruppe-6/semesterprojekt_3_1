@@ -1,4 +1,4 @@
-from decoding import *
+from decoding import decoder
 from speaker import spk
 from microphone import micro
 import numpy as np
@@ -6,7 +6,7 @@ import sounddevice as sd
 from scipy.fft import fft, fftfreq
 import time
 import pyaudio
-import filter
+from filter import fil
 
 
 class MovementProtocol:
