@@ -16,8 +16,8 @@ def main():
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            decoder.process_chunk(frequencies, magnitude)
-           bool_ack = proto.hello()
-           proto.movementBlock(bool_ack)
+           #bool_ack = proto.hello()
+           #proto.movementBlock(bool_ack)
            
     finally:
         micro.close()
