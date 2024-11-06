@@ -4,7 +4,7 @@ from plotting import plot
 import time #time
 
 class Decoding:
-    def __init__(self, debounce_time = 0.5, magnitude_threshold = 100000, frequency_tolerance = 20, last_detected = None, last_time = None):
+    def __init__(self, debounce_time = 0.5, magnitude_threshold = 100000, frequency_tolerance = 10, last_detected = None, last_time = None):
         # Define DTMF frequency pairs with their corresponding digits
         self.dtmf_freqs = {
             (697, 1209): '1', (697, 1336): '2', (697, 1477): '3', (697, 1633): 'A',
@@ -31,7 +31,7 @@ class Decoding:
             top_indices = np.argsort(magnitude[filtered_indices])[-2:] #Get the indices of the top two magnitudes
             detected_frequencies = frequencies[filtered_indices][top_indices]
 
-            # Idemtify the closest DTMF frequencies
+            # Identify the closest DTMF frequencies
             low_detected = min(detected_frequencies)
             high_detected = max(detected_frequencies)
             for (low_freq, high_freq), digit in self.dtmf_freqs.items():
@@ -61,7 +61,7 @@ class Decoding:
                 #Plot the frequency domain after a tone
                 #ONLY USE FOR DEBUG
                 #plot_frequency_domain(raw_frequencies, raw_magnitude)
-                #plot.frequency_domain(frequencies, magnitude)
+                plot.frequency_domain(frequencies, magnitude)
                 #plot_filter_response(cutoff, rate)
 
             elif self.last_detected and (time.time() - self.last_time) > self.debounce_time:
