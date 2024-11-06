@@ -9,14 +9,13 @@ from UI import ui
 
 
 def main():
-    proto.listen_for_ack("*")
     try:
        for audio_chunk in micro.capture_audio():
            filtered_chunk = fil.butter_bandpass(audio_chunk)
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            decoder.process_chunk(frequencies, magnitude)
-           #bool_ack = proto.hello()
+           bool_ack = proto.hello()
            #proto.movementBlock(bool_ack)
            
     finally:
