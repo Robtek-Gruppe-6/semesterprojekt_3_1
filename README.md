@@ -28,7 +28,7 @@ pip install numpy
 pip install sounddevice
 pip install scipy
 pip install pyaudio
-pip install matplotlib
+pip install matplotlib (or use: py -m pip install matplotlib)
 pip install windows-curses
 ```
 
