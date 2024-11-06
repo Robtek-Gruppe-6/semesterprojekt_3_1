@@ -3,7 +3,7 @@ from scipy.fft import fft, fftfreq #Fast Fourirer transfrom
 import numpy as np
 
 class Filter:
-    def __init__(self, order = 6, rate=44100, cutoff=650, stopoff=1800): 
+    def __init__(self, order = 6, rate=44100, cutoff=625, stopoff=1800): 
         # Default filter order can be overridden
         self.order = order #Default order is set to 6
         self.rate = rate # Sample rate
