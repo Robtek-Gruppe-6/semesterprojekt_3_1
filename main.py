@@ -1,5 +1,4 @@
 from control import *
-from protocolClass import proto 
 from decoding import decoder
 from filter import fil
 from speaker import spk
@@ -15,8 +14,6 @@ def main():
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            decoder.process_chunk(frequencies, magnitude)
-           #bool_ack = proto.hello()
-           #proto.movementBlock(bool_ack)
            
     finally:
         micro.close()
