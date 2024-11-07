@@ -40,15 +40,6 @@ class Decoding:
         return None, None
     
     def process_chunk(self, frequencies, magnitude):
-        
-            #Apply band pass butterworth filter
-            #filtered_chunk = fil.butter_bandpass(audio_chunk)
-
-            #Analyze frequencies
-            #frequencies, magnitude = fil.analyze_frequency(filtered_chunk) #Filtered chunck her for brug af filter og audio_chunck hvis uden filter
-
-            #Only used for debugging
-            #raw_frequencies, raw_magnitude = fil.analyze_frequency(audio_chunk, fil.rate)
 
             #Identify DTMF tone
             dtmf_tone, binary_value = self.identify_dtmf(frequencies, magnitude)
@@ -57,6 +48,8 @@ class Decoding:
                 print(f"Detected DTMF Tone: {dtmf_tone}") #Det her kunne godt tænkes at være i application layer, da de jo printer til UI
                 self.last_detected = dtmf_tone
                 self.last_time = time.time()
+                
+                return binary_value
 
                 #Plot the frequency domain after a tone
                 #ONLY USE FOR DEBUG
@@ -68,6 +61,9 @@ class Decoding:
                 self.last_detected = None
 
             time.sleep(0.01)  # Sleep to reduce CPU usage
+            return None
+        
+           
             
 
 decoder = Decoding() #Laver instans til main
