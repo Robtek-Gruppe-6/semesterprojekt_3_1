@@ -4,7 +4,7 @@ from plotting import plot
 import time #time
 
 class Decoding:
-    def __init__(self, debounce_time = 0.5, magnitude_threshold = 100000, frequency_tolerance = 10, last_detected = None, last_time = None):
+    def __init__(self, debounce_time = 0.5, magnitude_threshold = 100000, frequency_tolerance = 20, last_detected = None, last_time = None):
         # Define DTMF frequency pairs with their corresponding digits
         self.dtmf_freqs = {
             (697, 1209): ('1', 0b0001), (697, 1336): ('2', 0b0010), (697, 1477): ('3', 0b0011), (697, 1633): ('A', 0b1010),
@@ -49,14 +49,15 @@ class Decoding:
                 self.last_detected = dtmf_tone
                 self.last_time = time.time()
                 
-                return binary_value
+                
 
                 #Plot the frequency domain after a tone
                 #ONLY USE FOR DEBUG
                 #plot_frequency_domain(raw_frequencies, raw_magnitude)
                 #plot.frequency_domain(frequencies, magnitude)
                 #plot_filter_response(cutoff, rate)
-
+                return binary_value
+            
             elif self.last_detected and (time.time() - self.last_time) > self.debounce_time:
                 self.last_detected = None
 
