@@ -16,7 +16,13 @@ def main():
            
            binary_val = decoder.process_chunk(frequencies, magnitude)
            
-           
+           if binary_val is not None:
+               result = datalinker.receive_data(binary_val)
+               if result:
+                    
+                    collected_data, data_length = result
+                    print("Collected Data:", [bin(int(b, 2))[2:].zfill(4) for b in collected_data])
+                    print("Data Length:", data_length)
            
            
            
