@@ -2,11 +2,11 @@
 class Datalink():
     
     def __init__(self):
-        self.start_flag = "10101010"  # Start flag binary sequence A A
-        self.stop_flag = "10111011"   # Stop flag binary sequence B B
+        self.start_flag = 1010  # Start flag binary sequence A
+        self.stop_flag = 1011   # Stop flag binary sequence B
         self.collecting = False       # Tracks if we are currently collecting data
         self.data_buffer = []         # Buffer to store data between flags
-
+        
     def receive_data(self, binary_data):  # Binary data bliver nok en liste
         
         if self.collecting == False:

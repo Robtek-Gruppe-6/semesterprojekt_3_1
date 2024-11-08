@@ -5,15 +5,20 @@ from speaker import spk
 from microphone import micro
 from plotting import plot
 from UI import ui
-
+from datalink import datalinker
 
 def main():
+    
     try:
        for audio_chunk in micro.capture_audio():
            filtered_chunk = fil.butter_bandpass(audio_chunk)
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
-           decoder.process_chunk(frequencies, magnitude)
+           binary_val = decoder.process_chunk(frequencies, magnitude)
+           
+           
+           
+           
            
     finally:
         micro.close()

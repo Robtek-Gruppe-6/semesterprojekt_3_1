@@ -65,6 +65,7 @@ class Decoding:
             return None
         
            
-            
+
+
 
 decoder = Decoding() #Laver instans til main
