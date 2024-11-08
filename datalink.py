@@ -1,4 +1,4 @@
-
+import crc
 class Datalink():
     
     def __init__(self):
@@ -6,7 +6,21 @@ class Datalink():
         self.stop_flag = 1011   # Stop flag binary sequence B
         self.collecting = False       # Tracks if we are currently collecting data
         self.data_buffer = []         # Buffer to store data between flags
+
+    #def CRC8(self, data_list):
+        # Convert the list of hex values into a byte array
+        #data_bytes = bytearray()
+
+        #for hex_value in data_list:
+            # Convert each hex value (string) into an integer and append to the bytearray
+        #    data_bytes.append(int(hex_value, 16))
+        #print(data_bytes)
+
+        # Calculate CRC-8 using the crc8 function from the library
+        #crc_value = crc.Crc8(data_bytes)
         
+        #return crc_value
+            
     def receive_data(self, binary_data):  # Binary data bliver nok en liste
         
         if self.collecting == False:
