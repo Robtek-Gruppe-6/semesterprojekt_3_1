@@ -5,15 +5,18 @@ from speaker import spk
 from microphone import micro
 from plotting import plot
 from UI import ui
+from transport import trans
 
 
 def main():
     try:
-       for audio_chunk in micro.capture_audio():
-           filtered_chunk = fil.butter_bandpass(audio_chunk)
-           frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
-           
-           decoder.process_chunk(frequencies, magnitude)
+        for audio_chunk in micro.capture_audio():
+            filtered_chunk = fil.butter_bandpass(audio_chunk)
+            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
+            
+            chunk = decoder.process_chunk(frequencies, magnitude)
+            # Add hello function hello(chunk, time) maybe use time
+            trans.input_binary()
            
     finally:
         micro.close()
