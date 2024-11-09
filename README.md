@@ -1,6 +1,6 @@
 # DTMF Controlled Robot Protocol Group 6 ROBTEK Semester 3 SDU
 
-## Setup
+## Setup of VSCode
 
 To run the code you need to have the following packages
 sounddevice
@@ -30,6 +30,52 @@ pip install scipy
 pip install pyaudio
 pip install matplotlib (or use: py -m pip install matplotlib)
 pip install windows-curses
+```
+
+## Setup of Raspberry Pi NOT DONE!
+
+Install TB3_2024.IMG from ITSL.
+
+Install Raspberry Pi imager loader on ubuntu machine from Raspberry Pi website.
+
+In Raspberry Pi imager select Raspberry Pi 3 for operating system scrool down and choose custom now select the downloaded image from ITSL and select SD card to write to.
+
+After installtion on sd card is done open the writeable folder from the sd card and cd into correct folder. This can also be done manually by navigating to the correct folder.
+
+```
+cd /media/\$USER/writeable/etc/netplan/
+```
+
+Open the .yaml file using
+
+```
+sudo nano 50-cloud-init.yaml
+```
+
+In this file add the wifi or hotspot
+
+Now save and close the file. Eject the sd card and input in the RaspberryPi and boot it to a screen.
+
+Login to the RaspberryPi
+
+```
+Username: pi
+Password: password
+```
+
+Verify that it updates the time to make sure it has wifi.
+
+Now on an Ubuntu machine run
+
+```
+sudo arp-scan -l
+```
+
+Check for the RaspberryPi IP
+We can now ssh into it in a new terminal by typing
+
+```
+ssh pi@<ip of pi>
 ```
 
 ## Code explanation
