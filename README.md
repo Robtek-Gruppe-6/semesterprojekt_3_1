@@ -35,7 +35,7 @@ pip install windows-curses
 pip install libscrc
 ```
 
-## Setup of Raspberry Pi NOT DONE!
+## Setup of Raspberry Pi DONE TO THE PART OF SSH MORE TO COME!
 
 Install TB3_2024.IMG from ITSL.
 
@@ -55,20 +55,44 @@ Open the .yaml file using
 sudo nano 50-cloud-init.yaml
 ```
 
-In this file add the wifi or hotspot
+In this file add the wifi or hotspot the file should now look something like this
+
+```
+network:
+    version: 2
+    wifis:
+        renderer: networkd
+        wlan0:
+            access-points:
+                <WIFI SSID>:
+                password: <PASSWORD>
+            dhcp4: true
+            optional: true
+```
 
 Now save and close the file. Eject the sd card and input in the RaspberryPi and boot it to a screen.
+If this is run directly on the Pi make sure to run this command afterwards:
 
-Login to the RaspberryPi
+```
+sudo netplan apply
+```
+
+Now login to the RaspberryPi using a screen
 
 ```
 Username: pi
-Password: password
+Password: password123
 ```
 
-Verify that it updates the time to make sure it has wifi.
+Verify that it has wifi by running
 
-Now on an Ubuntu machine run
+```
+ip a
+```
+
+here you can see the ip of the Raspberry Pi under the wlan0
+or
+on an Ubuntu machine run
 
 ```
 sudo arp-scan -l
