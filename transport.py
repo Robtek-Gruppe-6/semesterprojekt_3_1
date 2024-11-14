@@ -16,5 +16,5 @@ class Transport:
         elif(crc == False):
             return False, data
         
-    def transmitter_flowcontrol(self,)
+    #def transmitter_flowcontrol(self,)
         
