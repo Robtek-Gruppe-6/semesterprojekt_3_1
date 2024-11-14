@@ -10,6 +10,7 @@ scipy
 matplotlib
 curses (If linux) Should be installed by default
 windows-curses (if windows)
+libscrc
 
 ### For Linux
 
@@ -19,6 +20,7 @@ pip install sounddevice
 pip install scipy
 pip install pyaudio
 pip install matplotlib
+pip install libscrc
 ```
 
 ### For Windows
@@ -30,6 +32,7 @@ pip install scipy
 pip install pyaudio
 pip install matplotlib (or use: py -m pip install matplotlib)
 pip install windows-curses
+pip install libscrc
 ```
 
 ## Setup of Raspberry Pi DONE TO THE PART OF SSH MORE TO COME!
