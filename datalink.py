@@ -1,4 +1,4 @@
-import crc
+#import crc
 class Datalink():
     
     def __init__(self):

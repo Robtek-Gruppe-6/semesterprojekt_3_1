@@ -16,7 +16,7 @@ def main():
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            binary_val = decoder.process_chunk(frequencies, magnitude)
-           framer.input_binary()
+           #framer.input_binary()
            
            if binary_val is not None:
                result = datalinker.receive_data(binary_val)
