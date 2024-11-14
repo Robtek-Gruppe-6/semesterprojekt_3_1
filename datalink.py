@@ -1,5 +1,3 @@
-import libscrc
-import libscrc._crcx
 class Datalink():
     
     def __init__(self):

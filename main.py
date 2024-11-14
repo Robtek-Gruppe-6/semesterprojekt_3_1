@@ -10,9 +10,7 @@ from dataframer import framer
 
 def main():
     
-    data_bytes = bytes.fromhex("1234ABCD 1234ABCD 12FF1BCD 1234ABCD 1234ABCD 0000FFF1")  # Some example hex data
-    checksum = datalinker.CRC8(data_bytes)
-    print(f"CRC8 Checksum: {checksum}")
+    framer.input_binary()
 
     try:
        for audio_chunk in micro.capture_audio():
@@ -20,7 +18,6 @@ def main():
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            binary_val = decoder.process_chunk(frequencies, magnitude)
-           #framer.input_binary()
            
            if binary_val is not None:
                result = datalinker.receive_data(binary_val)
