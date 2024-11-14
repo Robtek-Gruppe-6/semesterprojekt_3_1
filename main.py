@@ -10,6 +10,10 @@ from dataframer import framer
 
 def main():
     
+    data_bytes = bytes.fromhex("1234ABCD 1234ABCD 12FF1BCD 1234ABCD 1234ABCD 0000FFF1")  # Some example hex data
+    checksum = datalinker.CRC8(data_bytes)
+    print(f"CRC8 Checksum: {checksum}")
+
     try:
        for audio_chunk in micro.capture_audio():
            filtered_chunk = fil.butter_bandpass(audio_chunk)

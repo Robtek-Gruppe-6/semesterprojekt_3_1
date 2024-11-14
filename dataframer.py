@@ -13,6 +13,11 @@ class Transport():
     def stop_sqn(self):
         spk.play_dtmf_tone("B")
 
+    def play_all_tones(self, data_list):
+        for i in data_list:
+            spk.play_dtmf_tone(i)
+        
+
     def length_byte(self, binary_len=0):
         hex_len = hex(binary_len)
         stripped_hex = hex_len[2:]
@@ -20,21 +25,37 @@ class Transport():
         if(len(stripped_hex) == 1):
             spk.play_dtmf_tone("0")
             print("0")
-        for i in hex_list:
-            print(i)
-            spk.play_dtmf_tone(i)
+        self.play_all_tones(hex_list)
+
+    def crc_byte(self, data):
+        # Step 1: Join the list of data items into a single string of hex values
+        data_str = ''.join(data)
+
+        # Step 2: Split the data into chunks of 8 characters (8 hex digits = 4 bytes)
+        chunks = [data_str[i:i+8] for i in range(0, len(data_str), 8)]
+        
+
+        # Step 3: For each chunk, calculate the CRC8 and play the tones
+        for chunk in chunks:
+            # If the chunk is less than 8 characters, pad with leading zeros
+            chunk = chunk.zfill(8)
+            print(chunk)
+            
+            # Step 5: Calculate CRC for the current frame and play tones
+            data_bytes = bytearray.fromhex(chunk)
+            crc_output = datalinker.CRC8(data_bytes)
+            self.play_all_tones(crc_output)
 
 
     def send_binary_string(self, binary):
         binary_list = list(binary)
         binary_len = len(binary_list)
-        self.start_sqn()             # Start byte
-        self.length_byte(binary_len) # Length byte
-        for i in binary_list:
-            spk.play_dtmf_tone(i)    # Payload byte
-        #CRC_stuff = datalinker.CRC8(binary_list) # CRC byte
-        #print(CRC_stuff)
-        self.stop_sqn()              # Stop byte
+
+        self.start_sqn()                 # Start byte
+        self.length_byte(binary_len)     # Length byte
+        self.play_all_tones(binary_list) # Payload byte(s)
+        self.crc_byte(binary_list)       # CRC byte
+        self.stop_sqn()                  # Stop byte
 
     def hello(self):
         self.send_binary_string()
