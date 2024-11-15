@@ -7,14 +7,28 @@ class Transport:
         self.segment = segment
         pass
     
-    def reciver_flowcontrol(self, crc, segment):
+    def receiver_flowcontrol(self, crc, segment):
         #Reciver side
         data = segment
-        if(crc == True):
-            return True, data
+        if crc:
+            mode, distance = self.parse_segment(segment)
+            return True, mode, distance
         
         elif(crc == False):
-            return False, data
+            return False, None, None
         
     #def transmitter_flowcontrol(self,)
+    
+    def parse_segment(self, segment):
+        n_mode = 1  
+
+        mode = segment[:n_mode]  # First `n_mode` nibbles
+        distance = segment[n_mode:]  # Next `n_distance` nibbles
+
+        return mode, distance
         
+        
+
+transport = Transport()
+
+
