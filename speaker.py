@@ -43,7 +43,7 @@ class Speaker:
         t = np.linspace(0, self.duration, int(self.sample_rate * self.duration), False)
 
         # Generate the two sine waves and sum them to create the DTMF tone
-        tone = (np.sin(2 * np.pi * low_freq * t) + np.sin(2 * np.pi * high_freq * t)) * 0.5
+        tone = (np.sin(2 * np.pi * low_freq * t) + np.sin(2 * np.pi * high_freq * t)) * 0.5 #Needs to be adjusted
         return tone
 
     # Function to play the DTMF tone
