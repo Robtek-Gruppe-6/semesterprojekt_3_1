@@ -10,13 +10,14 @@ from dataframer import framer
 
 def main():
     
+    framer.input_binary()
+
     try:
        for audio_chunk in micro.capture_audio():
            filtered_chunk = fil.butter_bandpass(audio_chunk)
            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
            
            binary_val = decoder.process_chunk(frequencies, magnitude)
-           #framer.input_binary()
            
            if binary_val is not None:
                result = datalinker.receive_data(binary_val)
