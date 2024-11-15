@@ -8,23 +8,32 @@ from UI import ui
 from datalink import datalinker
 from dataframer import framer
 
+start_byte = False
+
 def main():
     
+    #framer.input_binary()
+
     try:
-       for audio_chunk in micro.capture_audio():
-           filtered_chunk = fil.butter_bandpass(audio_chunk)
-           frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
+        for audio_chunk in micro.capture_audio():
+            filtered_chunk = fil.butter_bandpass(audio_chunk)
+            frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
+            
+            binary_val = decoder.process_chunk(frequencies, magnitude)
+            if(binary_val == 10 and not start_byte):
+                print("Start-byte detected.")
+                start_byte = True
+            
+            
+                
            
-           binary_val = decoder.process_chunk(frequencies, magnitude)
-           #framer.input_binary()
-           
-           if binary_val is not None:
-               result = datalinker.receive_data(binary_val)
-               if result:
-                    
-                    collected_data, data_length = result
-                    print("Collected Data:", [bin(int(b, 2))[2:].zfill(4) for b in collected_data])
-                    print("Data Length:", data_length)
+           #if binary_val is not None:
+           #    result = datalinker.receive_data(binary_val)
+           #    if result:
+           #         
+           #         collected_data, data_length = result
+           #         print("Collected Data:", [bin(int(b, 2))[2:].zfill(4) for b in collected_data])
+           #         print("Data Length:", data_length)
            
            
            
