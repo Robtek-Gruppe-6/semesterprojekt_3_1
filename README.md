@@ -105,4 +105,27 @@ We can now ssh into it in a new terminal by typing
 ssh pi@<ip of pi>
 ```
 
+Inside of the pi we need to setup ROS and know where our files are.
+Trying to setup with mqtt interface first
+
+```
+screen
+```
+
+Then
+
+```
+ros2 launch mqtt_2_cmd_pkg mqtt_interface . launch . py
+```
+
+Then hit ctrl + a + c
+
+Then run this
+
+```
+python3 main.py
+```
+
+MORE DETAILS ABOUT THIS TO FOLLOW.
+
 ## Code explanation

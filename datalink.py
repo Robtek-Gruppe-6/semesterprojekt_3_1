@@ -1,4 +1,3 @@
-#import crc
 class Datalink():
     
     def __init__(self):
@@ -8,6 +7,21 @@ class Datalink():
         self.data_buffer = []         # Buffer to store data between flags
         self.data_length = None
         
+    def CRC8(self, data_bytes):
+        polynomial = 0x07 # Translates to 1000 0111 or x^8 + x^2 + x + 1
+        crc = 0
+        for byte in data_bytes:
+            crc ^= byte # XOR gate
+            for _ in range(8):  # Process each bit
+                if crc & 0x80:  # If the leftmost bit is set
+                    crc = (crc << 1) ^ polynomial 
+                else:
+                    crc <<= 1
+                crc &= 0xFF  # Ensure CRC remains 8 bits
+
+        return hex(crc)[2:].zfill(2)  # Convert to hex and zero-pad to 2 characters
+       
+
     def receive_data(self, data):  # Binary data bliver nok en liste
         binary_data = format(data, '04b')
 
