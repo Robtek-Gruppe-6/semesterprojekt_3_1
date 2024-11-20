@@ -1,4 +1,5 @@
 #import crc
+from speaker import spk
 class Datalink():
     
     def __init__(self):
@@ -8,6 +9,21 @@ class Datalink():
         self.data_buffer = []         # Buffer to store data between flags
         self.data_length = None
         
+    def CRC8(self, data_bytes):
+        polynomial = 0x07 # Translates to 1000 0111 or x^8 + x^2 + x + 1
+        crc = 0
+        for byte in data_bytes:
+            crc ^= byte # XOR gate
+            for _ in range(8):  # Process each bit
+                if crc & 0x80:  # If the leftmost bit is set
+                    crc = (crc << 1) ^ polynomial 
+                else:
+                    crc <<= 1
+                crc &= 0xFF  # Ensure CRC remains 8 bits
+
+        return hex(crc)[2:].zfill(2)  # Convert to hex and zero-pad to 2 characters
+
+
     def receive_data(self, data):  # Binary data bliver nok en liste
         binary_data = format(data, '04b')
 
@@ -75,55 +91,72 @@ class Receiver():
 
 
     def robot_receiver(self, binary_val):
-        while(1):
-            if binary_val == 0xA and not self.start_byte:  # Start byte detection
-                print("Start-byte detected.")
-                self.start_byte = True
-                continue
+        if binary_val == 0xA and not self.start_byte:  # Start byte detection
+            print("Start-byte detected.")
+            self.start_byte = True
+            return
 
-            if self.start_byte:
-                if not self.len1_bool:  # First length byte
-                    len1 = binary_val
-                    if(len1 != None):
-                        self.len1_bool = True
-                        print(f"Length byte 1 received: {len1}")
-                elif not self.len2_bool:  # Second length byte
-                    len2 = binary_val
-                    if(len2 != None):
-                        self.length_val = (len1 << 4) | len2  # Combine length bytes
-                        self.len2_bool = True
-                        print(f"Length byte 2 received: {len2}, Total length: {self.length_val}")
-                elif self.counter < self.length_val:  # Collect data based on length
-                    if(binary_val != None):
-                        self.data += str(binary_val)  # Append as hex string
-                        self.counter += 1
+        if self.start_byte:
+            if not self.len1_bool:  # First length byte
+                self.len1 = binary_val
+                if(self.len1 != None):
+                    self.len1_bool = True
+                    print(f"Length byte 1 received: {self.len1}")
+            elif not self.len2_bool:  # Second length byte
+                self.len2 = binary_val
+                if(self.len2 != None):
+                    self.length_val = (self.len1 << 4) | self.len2  # Combine length bytes
+                    self.len2_bool = True
+                    print(f"Length byte 2 received: {self.len2}, Total length: {self.length_val}")
+            elif self.counter < self.length_val:  # Collect data based on length
+                if(binary_val != None):
+                    self.data += str(binary_val)  # Append as hex string
+                    self.counter += 1
 
-                if self.counter == self.length_val and not self.counting_done:  # Stop when all data is received
-                    print(f"Data collection complete: {self.data}")
-                    self.counting_done = True
-                    continue
+            if self.counter == self.length_val and not self.counting_done:  # Stop when all data is received
+                print(f"Data collection complete: {self.data}")
+                self.counting_done = True
+                return
 
-                if self.counting_done:
-                    if not self.crc1_bool:  # First length byte
-                        crc1 = binary_val
-                        if(crc1 != None):
-                            self.crc1_bool = True
-                            print(f"CRC byte 1 received: {crc1}")
-                    elif not self.crc2_bool:  # Second length byte
-                        crc2 = binary_val
-                        if(crc2 != None):
-                            crc_val = (crc1 << 4) | crc2  # Combine length bytes
-                            self.crc2_bool = True
-                            print(f"CRC byte 2 received: {crc2}, CRC value: {crc_val}")
-                            continue
+            if self.counting_done:
+                if not self.crc1_bool:  # First CRC byte
+                    self.crc1 = binary_val
+                    if(self.crc1 != None):
+                        self.crc1_bool = True
+                        print(f"CRC byte 1 received: {self.crc1}")
+                elif not self.crc2_bool:  # Second CRC byte
+                    self.crc2 = hex(int(binary_val))
+                    if(self.crc2 != None):
+                        self.crc_val = f"{self.crc1}{self.crc2}"  # Combine CRC bytes
+                        self.crc2_bool = True
+                        print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
+                        return
 
-                if self.crc2_bool and binary_val == 0xB:
-                    print("Stop byte detetcted: Data-frame complete.")
-                    print(f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{crc_val}B")
-                    actual_crc = datalinker.CRC8(bytearray.fromhex(self.data))
-                    print(f"CRC value: {crc_val}" + f" Actual CRC: {actual_crc}")
+            if self.crc2_bool and binary_val == 0xB:
+                print("Stop byte detetcted: Data-frame complete.")
+                print(f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val.zfill(2)}B")
+                actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8)))
+                print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
 
-                    if(crc_val == actual_crc):
-                        print("CRC matches.")
+                if(self.crc_val.zfill(2) == actual_crc):
+                    print("CRC matches.")
 
-                    break
+                self.start_byte = False
+                self.counter = 0
+                self.len1_bool = False
+                self.len2_bool = False
+                self.crc1_bool = False
+                self.crc2_bool = False
+                self.counting_done = False
+                self.data = ""
+                self.length_val = 255
+
+                spk.play_dtmf_tone("A")
+                spk.play_dtmf_tone("0")
+                spk.play_dtmf_tone("1")
+                spk.play_dtmf_tone("F")
+                spk.play_dtmf_tone("A")
+
+                return
+            
+datareceiver = Receiver()
