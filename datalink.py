@@ -1,11 +1,13 @@
 class Datalink():
     
     def __init__(self):
-        self.start_flag = '1010'  # Start flag binary sequence A 
+        self.start_flagA = '1010'  # Start flag binary sequence A 
+        self.start_flagC = '1100'  # Start flag binary sequence C
         self.stop_flag = '1011'   # Stop flag binary sequence B
         self.collecting = False       # Tracks if we are currently collecting data
         self.data_buffer = []         # Buffer to store data between flags
         self.data_length = None
+        self.data_oddeven = None
         
     def CRC8(self, data_bytes):
         polynomial = 0x07 # Translates to 1000 0111 or x^8 + x^2 + x + 1
@@ -28,10 +30,19 @@ class Datalink():
         
         if self.collecting == False:
             # Listen for start flag
-            if binary_data == self.start_flag:
+            if binary_data == self.start_flagA:
                 print("Start flag detected. Beginning data collection.") #Decoding
                 self.collecting = "reading_length"
                 self.data_buffer = []  # Clear buffer for new data
+                self.data_oddeven = 'A'
+                
+            elif binary_data == self.start_flagC:
+                print("Start flag detected. Beginning data collection.") #Decoding
+                self.collecting = "reading_length"
+                self.data_buffer = []  # Clear buffer for new data
+                self.data_oddeven = 'B'
+                
+                
                 
         elif self.collecting == "reading_length":
                 if self.data_length is None:
@@ -42,7 +53,6 @@ class Datalink():
                     self.collecting = True
                 
         else:
-            
             # Listen for stop flag to end data collection
             if binary_data == self.stop_flag:
                 print("Stop flag detected. Ending data collection.")
@@ -51,7 +61,7 @@ class Datalink():
                 self.data_buffer = []    # Clear buffer
                 data_length = self.data_length
                 self.data_length = None
-                return collected_data, data_length    # Return collected data for processing
+                return collected_data, data_length, self.data_oddeven    # Return collected data for processing
             else:
                 # Add incoming data to the buffer
                 self.data_buffer.append(binary_data)
