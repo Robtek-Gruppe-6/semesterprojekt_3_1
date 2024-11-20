@@ -115,7 +115,7 @@ screen
 Then
 
 ```
-ros2 launch mqtt_2_cmd_pkg mqtt_interface . launch . py
+ros2 launch mqtt_2_cmd_pkg mqtt_interface.launch.py
 ```
 
 Then hit ctrl + a + c
