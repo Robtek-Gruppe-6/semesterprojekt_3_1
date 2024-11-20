@@ -40,7 +40,7 @@ class Datalink():
                 print("Start flag detected. Beginning data collection.") #Decoding
                 self.collecting = "reading_length"
                 self.data_buffer = []  # Clear buffer for new data
-                self.data_oddeven = 'B'
+                self.data_oddeven = 'C'
                 
                 
                 
