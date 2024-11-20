@@ -1,11 +1,11 @@
 
-
+#NOT CURRENTLY IN USE
 class ResponderCommands():
     def __init__(self, mode = [], distance = []):
         self.mode = mode
         self.distance = distance
         self.modeList = {
-            (0b1010): ("Drive"), (0b1011): ("Turn") 
+            (0b0001): ("Drive"), (0b0010): ("Turn") 
         }
         self.commandBlockList = []
     
