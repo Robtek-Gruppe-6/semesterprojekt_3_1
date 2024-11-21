@@ -7,6 +7,7 @@ class Transport:
         self.crc = crc
         self.segment = segment
         self.crc_value = crc_value
+        self.count = 0
         pass
     
     def reciver_flowcontrol(self, segment):
@@ -29,6 +30,14 @@ class Transport:
             crc_value = ""
             data = ""
             return True
+        
+    def transmitter_oddeven(self):
+        if self.count == 0:
+            self.count = 1
+            return 0
+        elif self.count == 1:
+            self.count = 0
+            return 1
         
 flowcontrol = Transport()
     #def transmitter_flowcontrol(self,)
