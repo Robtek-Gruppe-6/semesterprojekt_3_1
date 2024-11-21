@@ -4,12 +4,19 @@ from datalink import datalinker
 
 class Transport():
     def __init__(self):
-        self.start_flag = "10101010"  # Start flag binary sequence A A
-        self.stop_flag = "10111011"   # Stop flag binary sequence B B
+        self.start_flag = "10101010"  # Start flag binary sequence A
+        self.stop_flag = "10111011"   # Stop flag binary sequence B
+        self.counter = 0
 
     def start_sqn(self):
-        spk.play_dtmf_tone("A")
-        return "A"
+        if (self.counter % 2 == 0): #Even
+            spk.play_dtmf_tone("A")
+            self.counter = 1
+        elif (self.counter % 2 == 1): #Odd
+            spk.play_dtmf_tone("C")
+            self.counter = 0
+        
+        
         
     def stop_sqn(self):
         spk.play_dtmf_tone("B")

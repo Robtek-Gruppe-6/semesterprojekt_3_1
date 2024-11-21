@@ -19,7 +19,7 @@ class Transport:
         
     #def transmitter_flowcontrol(self,)
     
-    def parse_segment(self, segment):
+    def parse_segment(self, segment): #Skal nok være præsentatnions lag :D
         n_mode = 1  
 
         mode = segment[:n_mode]  # First `n_mode` nibbles
