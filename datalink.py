@@ -13,7 +13,8 @@ class Datalink():
         polynomial = 0x07 # Translates to 1000 0111 or x^8 + x^2 + x + 1
         crc = 0
         for byte in data_bytes:
-            crc ^= byte # XOR gate
+            print(int(byte, 16))
+            crc ^= int(byte, 16) # XOR gate
             for _ in range(8):  # Process each bit
                 if crc & 0x80:  # If the leftmost bit is set
                     crc = (crc << 1) ^ polynomial 
@@ -82,3 +83,96 @@ datalinker = Datalink()
 #        # Print collected data and data length for verification
 #        print("Collected Data:", [bin(int(b, 2))[2:].zfill(4) for b in collected_data])
 #        print("Data Length:", data_length)
+
+class Receiver():
+    def __init__(self):
+
+        self.start_byte = False
+        self.counter = 0
+        self.len1_bool = False
+        self.len2_bool = False
+        self.crc1_bool = False
+        self.crc2_bool = False
+        self.counting_done = False
+        self.data = ""
+        self.length_val = 255
+
+
+
+    def robot_receiver(self, binary_val):
+        # Start byte detection
+        if binary_val == 0xA and not self.start_byte:
+            print("Start-byte detected.")
+            self.start_byte = True
+            return
+
+        # Length byte detection
+        if self.start_byte:
+            if not self.len1_bool:  # First length byte
+                self.len1 = binary_val
+                if(self.len1 != None):
+                    self.len1_bool = True
+                    print(f"Length byte 1 received: {self.len1}")
+            elif not self.len2_bool:  # Second length byte
+                self.len2 = binary_val
+                if(self.len2 != None):
+                    self.length_val = (self.len1 << 4) | self.len2  # Combine length bytes
+                    self.len2_bool = True
+                    print(f"Length byte 2 received: {self.len2}, Total length: {self.length_val}")
+            elif self.counter < self.length_val:  # Collect data based on length
+                if(binary_val != None):
+                    self.data += str(binary_val)  # Append as hex string
+                    self.counter += 1
+
+            # Data collection complete
+            if self.counter == self.length_val and not self.counting_done:  # Stop when all data is received
+                print(f"Data collection complete: {self.data}")
+                self.counting_done = True
+                return
+
+            # CRC byte collection
+            if self.counting_done:
+                if not self.crc1_bool and binary_val != None:  # First CRC byte
+                    self.crc1 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
+                    self.crc1_bool = True
+                    print(f"CRC byte 1 received: {self.crc1}")
+                elif not self.crc2_bool and binary_val != None:  # Second CRC byte
+                    self.crc2 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
+                    self.crc_val = f"{self.crc1}{self.crc2}".zfill(2)  # Combine CRC bytes
+                    self.crc2_bool = True
+                    print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
+                    return
+
+            if self.crc2_bool and binary_val == 0xB:
+                print("Stop byte detetcted: Data-frame complete.")
+                #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
+                #print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
+
+                #if(self.crc_val.zfill(2) == actual_crc):
+                #    print("CRC matches.")
+
+                entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val}B"
+                print(entire_frame)
+                #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
+                #print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
+
+                #if(self.crc_val.zfill(2) == actual_crc):
+                #    print("CRC matches.")
+
+                # Store the result to return after resetting
+                result = (entire_frame, self.crc_val, self.data)
+
+                # Reset all variables for new data-frame
+                self.start_byte = False
+                self.counter = 0
+                self.len1_bool = False
+                self.len2_bool = False
+                self.crc1_bool = False
+                self.crc2_bool = False
+                self.counting_done = False
+                self.data = ""
+                self.length_val = 255
+
+                return result
+            
+datareceiver = Receiver()

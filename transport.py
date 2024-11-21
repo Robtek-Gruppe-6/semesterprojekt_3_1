@@ -10,10 +10,16 @@ class Transport:
         pass
     
     def reciver_flowcontrol(self, segment):
-        [result] = datareceiver.robot_receiver(segment)
-        crc_value = result(1)
-        data = result(2)
-        calc_crc = datalinker.CRC8(data)
+        result = datareceiver.robot_receiver(segment)
+        if result is None:
+            return False, None
+
+
+        entire_frame, crc_value, data = result
+        data_hex = hex(int(data))[2:]
+        print(f"crc_value: {crc_value}. data: {data_hex}")
+        calc_crc = datalinker.CRC8(data_hex).upper()
+        print(f"calc_crc: {calc_crc}")
 
         # Receiver side
         if(crc_value == calc_crc):
