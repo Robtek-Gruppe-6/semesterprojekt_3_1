@@ -91,11 +91,13 @@ class Receiver():
 
 
     def robot_receiver(self, binary_val):
-        if binary_val == 0xA and not self.start_byte:  # Start byte detection
+        # Start byte detection
+        if binary_val == 0xA and not self.start_byte:
             print("Start-byte detected.")
             self.start_byte = True
             return
 
+        # Length byte detection
         if self.start_byte:
             if not self.len1_bool:  # First length byte
                 self.len1 = binary_val
@@ -113,11 +115,13 @@ class Receiver():
                     self.data += str(binary_val)  # Append as hex string
                     self.counter += 1
 
+            # Data collection complete
             if self.counter == self.length_val and not self.counting_done:  # Stop when all data is received
                 print(f"Data collection complete: {self.data}")
                 self.counting_done = True
                 return
 
+            # CRC byte collection
             if self.counting_done:
                 if not self.crc1_bool and binary_val != None:  # First CRC byte
                     self.crc1 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
@@ -125,21 +129,22 @@ class Receiver():
                     print(f"CRC byte 1 received: {self.crc1}")
                 elif not self.crc2_bool and binary_val != None:  # Second CRC byte
                     self.crc2 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
-                    self.crc_val = f"{self.crc1}{self.crc2}"  # Combine CRC bytes
+                    self.crc_val = f"{self.crc1}{self.crc2}".zfill(2)  # Combine CRC bytes
                     self.crc2_bool = True
                     print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
                     return
 
             if self.crc2_bool and binary_val == 0xB:
                 print("Stop byte detetcted: Data-frame complete.")
-                entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val.zfill(2)}B"
+                entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val}B"
                 print(entire_frame)
-                actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
-                print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
+                #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
+                #print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
 
-                if(self.crc_val.zfill(2) == actual_crc):
-                    print("CRC matches.")
+                #if(self.crc_val.zfill(2) == actual_crc):
+                #    print("CRC matches.")
 
+                # Reset all variables for new data-frame
                 self.start_byte = False
                 self.counter = 0
                 self.len1_bool = False
@@ -150,12 +155,13 @@ class Receiver():
                 self.data = ""
                 self.length_val = 255
 
+                # Send ACK
                 spk.play_dtmf_tone("A")
                 spk.play_dtmf_tone("0")
                 spk.play_dtmf_tone("1")
                 spk.play_dtmf_tone("F")
                 spk.play_dtmf_tone("A")
 
-                return entire_frame
+                return entire_frame, self.crc_val
             
 datareceiver = Receiver()
