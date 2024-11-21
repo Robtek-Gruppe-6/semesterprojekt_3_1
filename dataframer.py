@@ -81,13 +81,14 @@ class Dataframing():
 
 framer = Dataframing() # Laver instans til main
 
-testlist = ["A", "B", "C", "D", "2"]
-testlist2 = ["A", "B", "C", "D", "2"]
-
+#testlist = ["A", "B", "C", "D", "2"]
+#testlist2 = ["A", "B", "C", "D", "2"]
+#testlist3 = "A120"
 
 #gg = framer.build_frame(testlist)
 #ggg = framer.build_frame(testlist2)
+#gggg = framer.build_frame(testlist3)
 
 #print(gg)
 #print(ggg)
-
+#print(gggg)

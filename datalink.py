@@ -13,8 +13,8 @@ class Datalink():
         polynomial = 0x07 # Translates to 1000 0111 or x^8 + x^2 + x + 1
         crc = 0
         for byte in data_bytes:
-            print(int(byte, 16))
-            crc ^= int(byte, 16) # XOR gate
+            #print(int(byte, 16))
+            crc ^= int(str(byte), 16) # XOR gate
             for _ in range(8):  # Process each bit
                 if crc & 0x80:  # If the leftmost bit is set
                     crc = (crc << 1) ^ polynomial 
