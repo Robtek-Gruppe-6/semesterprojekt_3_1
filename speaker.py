@@ -58,7 +58,7 @@ class Speaker:
         for key in self.dtmf_frequencies:
             self.play_dtmf_tone(key)
 
-    def play_list_of_tone(self, tones):
+    def play_list_of_tones(self, tones):
         #Takes a list of tones
         for tone in tones:
             self.play_dtmf_tone(tone)
