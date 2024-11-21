@@ -1,34 +1,35 @@
-
+from datalink import datareceiver, datalinker
+from speaker import spk
 
 
 class Transport:
-    def __init__(self, crc = True, segment = []):
+    def __init__(self, crc_value = "00", crc = False, segment = []):
         self.crc = crc
         self.segment = segment
+        self.crc_value = crc_value
         pass
     
-    def receiver_flowcontrol(self, crc, segment):
-        #Reciver side
-        data = segment
-        if crc:
-            mode, distance = self.parse_segment(segment)
-            return True, mode, distance
+    def reciver_flowcontrol(self, segment):
+        [result] = datareceiver.robot_receiver(segment)
+        crc_value = result(1)
+        data = result(2)
+        calc_crc = datalinker.CRC8(data)
+
+        # Receiver side
+        if(crc_value == calc_crc):
+            print("CRC check passed")
+            # Send ACK
+            #spk.play_dtmf_tone("A")
+            #spk.play_dtmf_tone("0")
+            #spk.play_dtmf_tone("1")
+            #spk.play_dtmf_tone("F")
+            #spk.play_dtmf_tone("A")
+            # We need to tell session layer that we have a correct CRC value
+
+            crc_value = ""
+            data = ""
+            return True
         
-        elif(crc == False):
-            return False, None, None
-        
+flowcontrol = Transport()
     #def transmitter_flowcontrol(self,)
-    
-    def parse_segment(self, segment): #Skal nok være præsentatnions lag :D
-        n_mode = 1  
-
-        mode = segment[:n_mode]  # First `n_mode` nibbles
-        distance = segment[n_mode:]  # Next `n_distance` nibbles
-
-        return mode, distance
         
-        
-
-transport = Transport()
-
-
