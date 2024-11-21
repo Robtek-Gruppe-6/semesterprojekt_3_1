@@ -1,16 +1,15 @@
 
 #NOT CURRENTLY IN USE
 class ResponderCommands(): #Burde skifte navn på class
-    def __init__(self, segment = []):
-        self.segment = segment
+    def __init__(self, data = []):
+        self.data = data
 
-    def parse_segment(self, segment):
-        n_mode = 1  
+    def parse_data(self, data):
+        n_mode = 1
 
-        mode = segment[:n_mode]  # First `n_mode` nibbles
-        distance = segment[n_mode:]  # Next `n_distance` nibbles
-
-        distance = int(distance, 16) # Convert directly if the distance is numeric (0-9) or hex character (A-F)
+        mode = data[:n_mode]  # First `n_mode` nibbles
+        distance = int(data[n_mode:])  # Next `n_distance` nibbles
+        
         return mode, distance
     
     #def __init__(self, mode = [], distance = []):
