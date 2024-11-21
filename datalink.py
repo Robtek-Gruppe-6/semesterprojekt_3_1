@@ -136,6 +136,12 @@ class Receiver():
 
             if self.crc2_bool and binary_val == 0xB:
                 print("Stop byte detetcted: Data-frame complete.")
+                #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
+                #print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
+
+                #if(self.crc_val.zfill(2) == actual_crc):
+                #    print("CRC matches.")
+
                 entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val}B"
                 print(entire_frame)
                 #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
@@ -143,6 +149,9 @@ class Receiver():
 
                 #if(self.crc_val.zfill(2) == actual_crc):
                 #    print("CRC matches.")
+
+                # Store the result to return after resetting
+                result = (entire_frame, self.crc_val, self.data)
 
                 # Reset all variables for new data-frame
                 self.start_byte = False
@@ -155,13 +164,6 @@ class Receiver():
                 self.data = ""
                 self.length_val = 255
 
-                # Send ACK
-                spk.play_dtmf_tone("A")
-                spk.play_dtmf_tone("0")
-                spk.play_dtmf_tone("1")
-                spk.play_dtmf_tone("F")
-                spk.play_dtmf_tone("A")
-
-                return entire_frame, self.crc_val
+                return result
             
 datareceiver = Receiver()
