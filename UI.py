@@ -1,97 +1,42 @@
-import curses
-import time
-#from movementProtocol import main as run_movement_protocol
-from control import Control
-
-class TerminalUI:
-    #Class variables
+def ui():
+    print("Welcome to the Robot Control System")
     
-    def __init__(self):
-        self.screen = None
-        self.control = Control()
-        
+    #Ask for mode
+    mode = input("Please select mode: \n1. Drive \n2. Turn \n3. Send commands\n")
     
-    def start_ui(self):
-        #Initialize the curses screen
-        self.screen = curses.initscr()
-        curses.noecho() #Do not echo key presses
-        curses.cbreak() #React to keys immediately without Enter
-        self.screen.keypad(True) #Enable special keys (arrows, ect.)
+    if mode == "1":
+        print("Drive mode selected")
+        #Ask for direction
+        direction = input("Please select direction: \n1. Forward \n2. Backward \n")
         
-    def stop_ui(self):
-        #Reset the terminal to its normal state
-        curses.nocbreak()
-        self.screen.keypad(False)
-        curses.echo()
-        curses.endwin()
-        
-    def display_menu(self, title, options):
-        self.screen.clear()
-        self.screen.border(0)
-        self.screen.addstr(1,2, title, curses.A_BOLD)
-        
-        #Display menu options
-        for idx, option in enumerate(options, start = 2):
-            self.screen.addstr(idx, 4, f"{idx - 1}. {option}")
-        
-        self.screen.refresh()
-        
-    def get_user_choice(self, num_options):
-        choice = -1
-        while choice not in range (1, num_options + 1):
-            key = self.screen.getch() #Wait for key press
-            if key in range(ord('1'), ord(str(num_options +1))):
-                choice = key - ord('0') #Convert ASCII to number
-        return choice
-    
-    def display_message(self, message, wait_seconds = 2):
-        self.screen.clear()
-        self.screen.addstr(1, 2, message)
-        self.screen.refresh()
-        time.sleep(wait_seconds)
-        
-    def clear_screen(self):
-        self.screen.clear()
-        self.screen.refresh()
-        
-    def run_example(self):
-        self.start_ui()
-        try:
-            #Display a sample menu
-            self.display_menu("Main Menu", ["Drive Mode", "Rotate Mode", "Option 3", "Quit"])
-            choice = self.get_user_choice(4)
-            if choice == 4:
-                self.display_message("Exiting...")
-            elif choice == 1:
-                self.display_message("Enter distance for Drive Mode:")
-                curses.echo()
-                distance = int(self.screen.getstr(3, 4, 10).decode('utf-8'))
-                curses.noecho()
-                self.control.drive_mode(distance)
-                self.display_message(f"Drive Mode activated with distance: {distance}")
-            elif choice == 2:
-                self.control.rotate_mode()
-                self.display_message("Rotate Mode activated")
-            else:
-                self.display_message("Option 3 selected")
-        finally:
-            #Ensure the terminal is reset even if an error occurs
-            self.stop_ui()
+        if direction == "1":
+            print("Please enter distance in meters: ")
+            distance = input()
+            print ("Driving forward " + distance + " meters")
             
-    #def run_protocol(self): #Runs the protocol but in the background instead of inside of the UI.
-    #    self.start_ui()
-    #    try:
-    #        #Display the protocol menu
-    #        self.display_menu("Welcome to the Robot Movement Block Protocol R.M.B.P", ["Run"])
-    #        choice = self.get_user_choice(1)
-    #        if choice == 1:
-    #            self.run_movement_protocol()
-    #    finally:
-    #        #Ensure the terminal is reset even if an error occurs
-    #        self.stop_ui()
-    #        
-    #def run_movement_protocol(self):
-    #    run_movement_protocol()
+        elif direction == "2":
+            print( "Please enter distance in meters: ")
+            distance = input()
+            print("Driving backward " + distance + " meters")
+        else:
+            print("Invalid input")
             
+    if mode == "2":
+        print("Turn mode selected")
+        #Ask for direction
+        direction = input("Please select direction: \n1. Right \n2. Left \n")
+        
+        if direction == "1":
+            print("Please enter degrees to turn: ")
+            degrees = input()
+            print("Turning right " + degrees + " degrees")
+        elif direction == "2":
+            print("Please enter degrees to turn: ")
+            degrees = input()
+            print("Turning left " + degrees + " degrees")
+        else:
+            print("Invalid input")
             
-ui = TerminalUI() #Initialize the UI
+    if mode == "3":
+        print("Sending all commands")
+ui()
