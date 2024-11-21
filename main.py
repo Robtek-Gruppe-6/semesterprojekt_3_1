@@ -4,6 +4,7 @@ from filter import fil
 from speaker import spk
 from microphone import micro
 from datalink import datareceiver
+from transport import flowcontrol
 #from plotting import plot
 #from UI import ui
 #from datalink import datalinker
@@ -21,7 +22,7 @@ def main():
             binary_val = decoder.process_chunk(frequencies, magnitude)
             #binary_val = int(input("."))
             #print(binary_val)
-            datareceiver.robot_receiver(binary_val)
+            flowcontrol(binary_val)
             #framer.input_binary()
             
             #if binary_val is not None:
