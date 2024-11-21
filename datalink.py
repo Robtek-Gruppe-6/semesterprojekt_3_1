@@ -119,23 +119,22 @@ class Receiver():
                 return
 
             if self.counting_done:
-                if not self.crc1_bool:  # First CRC byte
-                    self.crc1 = binary_val
-                    if(self.crc1 != None):
-                        self.crc1_bool = True
-                        print(f"CRC byte 1 received: {self.crc1}")
-                elif not self.crc2_bool:  # Second CRC byte
-                    self.crc2 = hex(int(binary_val))
-                    if(self.crc2 != None):
-                        self.crc_val = f"{self.crc1}{self.crc2}"  # Combine CRC bytes
-                        self.crc2_bool = True
-                        print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
-                        return
+                if not self.crc1_bool and binary_val != None:  # First CRC byte
+                    self.crc1 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
+                    self.crc1_bool = True
+                    print(f"CRC byte 1 received: {self.crc1}")
+                elif not self.crc2_bool and binary_val != None:  # Second CRC byte
+                    self.crc2 = hex(binary_val)[2:].upper() #hex(int(binary_val))[2:].upper()
+                    self.crc_val = f"{self.crc1}{self.crc2}"  # Combine CRC bytes
+                    self.crc2_bool = True
+                    print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
+                    return
 
             if self.crc2_bool and binary_val == 0xB:
                 print("Stop byte detetcted: Data-frame complete.")
-                print(f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val.zfill(2)}B")
-                actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8)))
+                entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val.zfill(2)}B"
+                print(entire_frame)
+                actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
                 print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
 
                 if(self.crc_val.zfill(2) == actual_crc):
@@ -157,6 +156,6 @@ class Receiver():
                 spk.play_dtmf_tone("F")
                 spk.play_dtmf_tone("A")
 
-                return
+                return entire_frame
             
 datareceiver = Receiver()
