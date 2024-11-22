@@ -23,10 +23,15 @@ def main():
     length_val = 255
     
     #Transmitter side
-    data = ui.ui()
-    frame = framer.build_frame(data)
-    print(f"Frame: {frame}")
-    spk.play_list_of_tones(frame)
+    while True:
+        loop_exit = ui.interface()
+        data = ui.datalist
+        frame = framer.build_frame(data)
+        print(f"Frame: {frame}")
+        spk.play_list_of_tones(frame)
+        ui.datalist = []
+        if loop_exit:
+            break
     
     
 #    framer.input_binary()
