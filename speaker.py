@@ -44,6 +44,17 @@ class Speaker:
 
         # Generate the two sine waves and sum them to create the DTMF tone
         tone = (np.sin(2 * np.pi * low_freq * t) + np.sin(2 * np.pi * high_freq * t)) * 0.5
+
+        # Apply fade-in and fade-out
+        fade_in_duration = int(self.sample_rate * 0.05)  # 50ms fade-in
+        fade_out_duration = int(self.sample_rate * 0.05)  # 50ms fade-out
+
+        fade_in = np.linspace(0, 1, fade_in_duration)
+        fade_out = np.linspace(1, 0, fade_out_duration)
+
+        tone[:fade_in_duration] *= fade_in
+        tone[-fade_out_duration:] *= fade_out
+
         return tone
 
     # Function to play the DTMF tone

@@ -63,6 +63,7 @@ class Dataframing():
         self.start_sqn() 
         
         #Length
+    
         self.length_byte(binary_data)
         
         #Actual data
@@ -75,7 +76,6 @@ class Dataframing():
         self.stop_sqn() 
 
         return self.tones
-    
     
     
 
