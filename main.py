@@ -52,8 +52,6 @@ def main():
             #    publish_command(0.0, 0.0)
             #    print("Published stop command")
            
-           
-           
            #Check if the binary value corresponds to a DTMF tone '1' or '#'
            #if binary_val == 1: # Assuming '0001' is the binary value for '1'
            #    angular_velocity = 0.05 # Set the angular velocity to 0.05 rad/s
