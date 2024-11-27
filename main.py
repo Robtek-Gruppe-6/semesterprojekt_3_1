@@ -20,6 +20,8 @@ def main():
             frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
             
             binary_val = decoder.process_chunk(frequencies, magnitude)
+            datareceiver.robot_receiver(binary_val)
+            
             #binary_val = int(input("."))
             #print(binary_val)
             #flowcontrol(binary_val)
@@ -71,8 +73,6 @@ def main():
 
 
 if __name__ == "__main__":
-    #ui.run_example() #UI example code
-    #ui.run_protocol() #Runs the movementProtocol but it needs to display that into the UI SO NOT DONE!
     main()
     
 
