@@ -69,9 +69,19 @@ class Speaker:
         for key in self.dtmf_frequencies:
             self.play_dtmf_tone(key)
 
+    def play_list_of_tones(self, tones):
+        #Takes a list of tones
+        for tone in tones:
+            self.play_dtmf_tone(tone)
+            
+            
+        
 
     # Play DTMF tones here
     #play_dtmf_tone('A')
     #play_all_dtmf_tones()
+    #tone_sequence = ['A', '0', '2', 'C']
+    #spk.play_list_of_tone(tone_sequence)
 
 spk = Speaker() #Laver instans til main
+

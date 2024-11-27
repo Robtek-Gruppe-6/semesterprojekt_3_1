@@ -12,6 +12,19 @@ from transport import flowcontrol
 from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
 
 def main():
+#     data = []
+#    
+#    #Transmitter side
+#    while True:
+#        loop_exit = ui.interface()
+#        data = ui.datalist
+#        frame = framer.build_frame(data)
+#        print(f"Frame: {frame}")
+#        spk.play_list_of_tones(frame)
+#        ui.datalist = []
+#        if loop_exit:
+#            break
+#    
     #start_mqtt() #Start the MQTT client
     A = input()
     lista = list(A)
