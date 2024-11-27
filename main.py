@@ -17,9 +17,11 @@ def main():
     while True:
         loop_exit = ui.interface()
         data = ui.datalist
-        frame = framer.build_frame(data)
+        segment = flowcontrol.transmitter_add_label(data)
+        frame = framer.build_frame(segment)
         print(f"Frame: {frame}")
         spk.play_list_of_tones(frame)
+        #flowcontrol.transport_timer(micro.capture_audio())
         ui.datalist = []
         if loop_exit:
             break
