@@ -101,7 +101,7 @@ class Receiver():
         if(binary_val != None):
             self.start_time = time.time()
             
-        if(self.start_time != 0 and time.time() > self.start_time + 2):
+        if(self.start_byte and self.start_time != 0 and time.time() > self.start_time + 2):
             self.start_byte = False
             self.counter = 0
             self.len1_bool = False
@@ -115,7 +115,7 @@ class Receiver():
             self.data_list = []
             self.start_buff = []
             self.start_time = 0
-            print("Error detected.")
+            print("Error detected: Timer expired.")
             return "Error"
         
         # Start byte detection
