@@ -13,6 +13,10 @@ from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the necce
 
 def main():
     #start_mqtt() #Start the MQTT client
+    A = input()
+    lista = list(A)
+    for i in lista:
+        spk.play_dtmf_tone(i)
     
     try:
         for audio_chunk in micro.capture_audio():
