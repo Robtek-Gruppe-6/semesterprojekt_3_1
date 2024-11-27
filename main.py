@@ -22,7 +22,7 @@ def main():
             binary_val = decoder.process_chunk(frequencies, magnitude)
             #binary_val = int(input("."))
             #print(binary_val)
-            flowcontrol(binary_val)
+            #flowcontrol(binary_val)
             #framer.input_binary()
             
             #if binary_val is not None:
@@ -49,17 +49,17 @@ def main():
            
            
            #Check if the binary value corresponds to a DTMF tone '1' or '#'
-            if binary_val == 1: # Assuming '0001' is the binary value for '1'
-                angular_velocity = 0.05 # Set the angular velocity to 0.05 rad/s
-                publish_command(0.0, angular_velocity) # Publish the command to the MQTT topic
-                print(f"Published angular velocity: {angular_velocity}")
-            elif binary_val == 2: #Assuming '0010' is the binary value for '2'
-                linear_velocity = 0.15
-                publish_command(linear_velocity, 0.0) # Publish the command to the MQTT topic
-                print(f"Published linear velocity: {linear_velocity}")
-            elif binary_val == 15: #Assuming '1111' is the binary value for '#'
-                publish_command(0.0, 0.0)
-                print("Published stop command")
+           #if binary_val == 1: # Assuming '0001' is the binary value for '1'
+           #    angular_velocity = 0.05 # Set the angular velocity to 0.05 rad/s
+           #    publish_command(0.0, angular_velocity) # Publish the command to the MQTT topic
+           #    print(f"Published angular velocity: {angular_velocity}")
+           #elif binary_val == 2: #Assuming '0010' is the binary value for '2'
+           #    linear_velocity = 0.15
+           #    publish_command(linear_velocity, 0.0) # Publish the command to the MQTT topic
+           #    print(f"Published linear velocity: {linear_velocity}")
+           #elif binary_val == 15: #Assuming '1111' is the binary value for '#'
+           #    publish_command(0.0, 0.0)
+           #    print("Published stop command")
            
            
            
