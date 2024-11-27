@@ -7,28 +7,21 @@ class Transport:
         self.crc = crc
         self.segment = segment
         self.crc_value = crc_value
+        self.prev_parity = []
         pass
     
-    def reciver_flowcontrol(self, segment):
-        [result] = datareceiver.robot_receiver(segment)
-        crc_value = result(1)
-        data = result(2)
-        calc_crc = datalinker.CRC8(data)
-
-        # Receiver side
-        if(crc_value == calc_crc):
-            print("CRC check passed")
+    def reciver_flowcontrol(self, no_error_detected, parity = "A", length = ['0', '0'], datadata = ['0']):
+        if((no_error_detected) and (parity != self.prev_parity[-1])):
+            self.prev_parity.append(parity)
+            return datadata
+        elif(not no_error_detected and parity != self.prev_parity[-1]):
+            self.prev_parity.append(parity)
+            # Send no ACK
+        elif(no_error_detected and parity == self.prev_parity[-1]):
             # Send ACK
-            #spk.play_dtmf_tone("A")
-            #spk.play_dtmf_tone("0")
-            #spk.play_dtmf_tone("1")
-            #spk.play_dtmf_tone("F")
-            #spk.play_dtmf_tone("A")
-            # We need to tell session layer that we have a correct CRC value
-
-            crc_value = ""
-            data = ""
-            return True
+            pass
+            
+            
         
 flowcontrol = Transport()
     #def transmitter_flowcontrol(self,)

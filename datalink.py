@@ -116,7 +116,8 @@ class Receiver():
             self.start_buff = []
             self.start_time = 0
             print("Error detected: Timer expired.")
-            return "Error"
+            
+            return False
         
         # Start byte detection
         if (binary_val == 0xA or binary_val == 0xC) and not self.start_byte:
@@ -203,6 +204,6 @@ class Receiver():
                 self.start_buff = []
                 
                 
-                return startflag, length, datadata, crccheck
+                return crccheck, startflag, length, datadata
             
 datareceiver = Receiver()
