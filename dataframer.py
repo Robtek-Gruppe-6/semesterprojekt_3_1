@@ -3,16 +3,10 @@ from datalink import datalinker
 
 class Dataframing():
     def __init__(self):
-        self.counter = 0
         self.tones = []
 
     def start_sqn(self):
-        if (self.counter % 2 == 0): #Even
             self.tones.append("A")
-            self.counter = 1
-        elif (self.counter % 2 == 1): #Odd
-            self.tones.append("C")
-            self.counter = 0
         
     def stop_sqn(self):
         self.tones.append("B")
