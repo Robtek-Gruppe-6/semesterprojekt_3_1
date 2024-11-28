@@ -1,5 +1,6 @@
 from datalink import datareceiver, datalinker
 from speaker import spk
+import time
 
 
 class Transport:
@@ -21,6 +22,23 @@ class Transport:
         elif(no_error_detected and parity == self.prev_parity[-1]):
             # Send ACK
             pass
+
+    def transport_timer(self, capture_audio_func):
+        start_time = time.time()
+        while time.time() - start_time <= 5:  # 5 seconds timeout
+            for audio_chunk in capture_audio_func():
+                frequencies, magnitude = fil.analyze_frequency(audio_chunk)
+                binary_value = decoder.process_chunk(frequencies, magnitude)
+                if binary_value == "F":  # Assuming 'ACK' is the binary value for acknowledgment
+                    return "Ack"
+        return "Error"
+
+    #def transport_timer(self, ack):
+    #    start_time = time.time()
+    #    while(time.time() - start_time <= 5):
+    #        if(ack == True):
+    #            return "Ack"
+    #    return "Error"
 
     def transmitter_add_label(self, data):
         new_data = []
