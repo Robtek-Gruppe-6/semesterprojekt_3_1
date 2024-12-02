@@ -96,8 +96,9 @@ class Receiver():
 
 
 
-    def robot_receiver(self, binary_val):
+    def frame_receiver(self, binary_val):
         crccheck = False
+        
         if(binary_val != None):
             self.start_time = time.time()
             
@@ -117,15 +118,15 @@ class Receiver():
             self.start_time = 0
             print("Error detected: Timer expired.")
             
-            return False
+            return None, [], [], []
         
         # Start byte detection
         if (binary_val == 0xA or binary_val == 0xC) and not self.start_byte:
             print("Start-byte detected.")
             self.start_byte = True
             self.start_buff.append(hex(binary_val)[2:].upper())
-            return
-
+            return None, [], [], []
+        
         # Length byte detection
         if self.start_byte:
             if not self.len1_bool:  # First length byte
@@ -150,7 +151,7 @@ class Receiver():
             # Data collection complete
             if self.counter == self.length_val and not self.counting_done:  # Stop when all data is received
                 self.counting_done = True
-                return
+                return None, [], [], []
 
             # CRC byte collection
             if self.counting_done:
@@ -163,7 +164,7 @@ class Receiver():
                     self.crc_val = f"{self.crc1}{self.crc2}".zfill(2)  # Combine CRC bytes
                     self.crc2_bool = True
                     print(f"CRC byte 2 received: {self.crc2}, CRC value: {self.crc_val}")
-                    return
+                    return None, [], [], []
 
             if self.crc2_bool and binary_val == 0xB:
                 print("Stop byte detetcted: Data-frame complete.")
@@ -175,7 +176,7 @@ class Receiver():
                     self.crc_boolean = True
                     crccheck = self.crc_boolean
                     
-
+                
                 #entire_frame = f"A{str(self.length_val).zfill(2)}" + f"{self.data}" + f"{self.crc_val}B"
                 #print(list(entire_frame))
                 #actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
@@ -186,7 +187,7 @@ class Receiver():
 
                 # Store the result to return after resetting
                 length = self.len_list 
-                datadata = self.data_list
+                datasegment = self.data_list
                 startflag = self.start_buff
 
                 # Reset all variables for new data-frame
@@ -204,6 +205,8 @@ class Receiver():
                 self.start_buff = []
                 
                 
-                return crccheck, startflag, length, datadata
+                return crccheck, startflag, length, datasegment
+    
+        return None, [], [], []
             
 datareceiver = Receiver()

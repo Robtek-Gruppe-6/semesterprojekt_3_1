@@ -16,7 +16,7 @@ def main():
             frequencies, magnitude = fil.analyze_frequency(filtered_chunk)
             
             binary_val = decoder.process_chunk(frequencies, magnitude)
-            datareceiver.robot_receiver(binary_val)
+            datareceiver.frame_receiver(binary_val)
             
             
             #if binary_val is not None:

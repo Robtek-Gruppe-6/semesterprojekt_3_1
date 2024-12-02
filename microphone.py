@@ -4,6 +4,7 @@ import numpy as np
 
 class Microphone:
     def __init__(self, rate = 44100, chunk_size = 1024):
+        self.data = None
         self.rate = rate #Sample rate
         self.chunk_size = chunk_size #Audio chunk size #With this sample rate and audio chuck size we measure every 23.2 milliseconds (Chuncksize/Samplerate = time per chunck)
         self.audio = pyaudio.PyAudio()
@@ -18,10 +19,11 @@ class Microphone:
         try:
             while True:
                 try:
-                    data = np.frombuffer(self.stream.read(self.chunk_size, exception_on_overflow=False), dtype=np.int16)
-                    yield data
+                    self.data = np.frombuffer(self.stream.read(self.chunk_size, exception_on_overflow=False), dtype=np.int16)
+                    yield self.data
                     #print(data) #Tester hvad vi får
                 except IOError:
+
                     # Handle buffer overflow or other I/O errors
                     continue
         finally:
