@@ -39,18 +39,7 @@ class Transport:
 #                binary_value = decoder.process_chunk(frequencies, magnitude)
 #                if binary_value == "F":  # Assuming 'ACK' is the binary value for acknowledgment
 #                    return "Ack"
-#                return "Error"
-
-
-        
-    def transport_ack_check(self, binary_value):
-        start_time = time.time()
-        print("Timer started")
-        while time.time() - start_time <= 5:  # Timeout after 5 seconds
-            pass
-        print("Timer expired")
-        return False
-            
+#                return "Error"            
 
     #Computer
     def computer_receiver_flowcontrol(self, crc, datasegment):
