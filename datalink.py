@@ -21,9 +21,11 @@ class Datalink():
                 else:
                     crc <<= 1
                 crc &= 0xFF  # Ensure CRC remains 8 bits
-
+                
+        print (hex(crc)[2:].zfill(2))
         return hex(crc)[2:].zfill(2)  # Convert to hex and zero-pad to 2 characters
-
+    
+    
 
     def receive_data(self, data):  # Binary data bliver nok en liste
         binary_data = (data) #format(data, '04b')
@@ -116,6 +118,7 @@ class Receiver():
             self.data_list = []
             self.start_buff = []
             self.start_time = 0
+            self.data = ""
             print("Error detected: Timer expired.")
             
             return None, [], [], []
@@ -144,8 +147,9 @@ class Receiver():
                     print(f"Length byte 2 received: {self.len2}, Total length: {self.length_val}")
             elif self.counter < self.length_val:  # Collect data based on length
                 if(binary_val != None):
-                    self.data += str(binary_val)  # Append as hex string
+                    self.data += hex(binary_val)[2:].upper()  # Append as hex string
                     self.data_list.append(hex(binary_val)[2:].upper())  # Append as hex string
+                    print(self.data_list)
                     self.counter += 1
 
             # Data collection complete
@@ -167,8 +171,12 @@ class Receiver():
                     return None, [], [], []
 
             if self.crc2_bool and binary_val == 0xB:
-                print("Stop byte detetcted: Data-frame complete.")
+                print("Stop byte detected: Data-frame complete.")
+                print(bytearray.fromhex(self.data.zfill(8)))
                 actual_crc = datalinker.CRC8(bytearray.fromhex(self.data.zfill(8))).upper()
+                # Convert data_list to bytearray
+                
+                
                 #print(f"CRC value: {self.crc_val.zfill(2)}" + f" Actual CRC: {actual_crc}")
 
                 if(self.crc_val.zfill(2) == actual_crc):
@@ -203,6 +211,7 @@ class Receiver():
                 self.len_list = []
                 self.data_list = []
                 self.start_buff = []
+                self.data = ""
                 
                 
                 return crccheck, startflag, length, datasegment

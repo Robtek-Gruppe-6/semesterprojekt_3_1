@@ -9,25 +9,27 @@ class Transport:
             self.crc = crc
             self.segment = segment
             self.crc_value = crc_value
-            self.prev_parity = []
+            self.prev_parity = 0
             self.prev_lebel = 0
     
     #ROBOT
-    def receiver_flowcontrol(self, no_error_detected, datasegment = ['0']):
+    def receiver_flowcontrol(self, crc, datasegment = ['0']):
+            
         parity = datasegment[0]
-        if((no_error_detected) and (parity != self.prev_parity)):
+        if((crc) and (parity != self.prev_parity)):
             self.prev_parity = parity
-            print("ACK") #debug
+            print("ACK, saved") #debug
             return True, datasegment[1:]
-        elif(not no_error_detected and parity != self.prev_parity):
-            self.prev_parity = parity
+        elif(not crc):
+            #self.prev_parity = parity
             # Send no ACK
             print("NO ACK") #debug
-            return False
-        elif(no_error_detected and parity == self.prev_parity):
+            return False, None
+        elif(crc and parity == self.prev_parity):
+            self.prev_lebel = parity
             # Send ACK
-            print("ACK") #debug
-            return True
+            print("ACK, disc") #debug
+            return True, None
 #        
 #    def transport_timer(self, capture_audio_func):
 #        start_time = time.time()
