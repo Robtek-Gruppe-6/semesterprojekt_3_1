@@ -68,11 +68,13 @@ class Speaker:
     def play_all_dtmf_tones(self):
         for key in self.dtmf_frequencies:
             self.play_dtmf_tone(key)
+            sd.wait()
 
     def play_list_of_tones(self, tones):
         #Takes a list of tones
         for tone in tones:
             self.play_dtmf_tone(tone)
+            sd.wait()
             
             
         
