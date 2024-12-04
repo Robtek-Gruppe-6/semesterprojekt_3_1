@@ -5,12 +5,10 @@ from speaker import spk
 from microphone import Microphone
 from datalink import datareceiver
 from transport import flowcontrol
-from robotcommandlayer import PresentationLayer
 #from plotting import plot
 from UI import ui
 #from datalink import datalinker
 from dataframer import framer
-import threading
 import time
 #from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
 
