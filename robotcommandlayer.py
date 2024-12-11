@@ -28,7 +28,7 @@ class PresentationLayer:
         distance_mapped = ""
         for char in distance_hex:
             if char in extended_mapping:
-                distance_mapped += extended_mapping[char]  # Replace with mapped value
+                 distance_mapped += str(extended_mapping[char])  # Replace with mapped value
             else:
                 distance_mapped += char  # Keep numeric values as is
 
