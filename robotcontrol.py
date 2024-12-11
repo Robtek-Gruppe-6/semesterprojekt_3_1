@@ -22,4 +22,4 @@ class RobotControl():
             print(f"Published angular velocity: {distance}")
 
 
-Robot = RobotControl()
+robot = RobotControl()
