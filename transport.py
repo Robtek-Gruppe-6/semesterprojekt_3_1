@@ -10,7 +10,7 @@ class Transport:
             self.segment = segment
             self.crc_value = crc_value
             self.prev_parity = 0
-            self.prev_lebel = 0
+            self.prev_lebel = 1 #Fix bug with parity
     
     #ROBOT
     def receiver_flowcontrol(self, crc, datasegment = ['0']):

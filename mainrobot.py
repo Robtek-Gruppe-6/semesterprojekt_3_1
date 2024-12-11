@@ -35,9 +35,11 @@ def main():
          if not datasegment and (crc == None):
             continue
          print(crc)
+         print(datasegment)
          
          ackchecked, data_rob = flowcontrol.receiver_flowcontrol(crc, datasegment)
-
+         print (ackchecked)
+         print (data_rob)
          if not ackchecked:
             continue
       
