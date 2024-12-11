@@ -123,7 +123,7 @@ Then hit ctrl + a + c
 Then run this
 
 ```
-python3 main.py
+python3 mainrobot.py
 ```
 
 MORE DETAILS ABOUT THIS TO FOLLOW.

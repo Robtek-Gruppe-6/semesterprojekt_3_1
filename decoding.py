@@ -4,7 +4,7 @@ from plotting import plot
 import time #time
 
 class Decoding:
-    def __init__(self, debounce_time = 0.5, magnitude_threshold = 70000, frequency_tolerance = 30, last_detected = None, last_time = None): #Was threshold = 100000 and tolerance = 20
+    def __init__(self, debounce_time = 0.5, magnitude_threshold = 30000, frequency_tolerance = 30, last_detected = None, last_time = None): #Was threshold = 100000 and tolerance = 20
         # Define DTMF frequency pairs with their corresponding digits
         self.dtmf_freqs = {
             (697, 1209): ('1', 0b0001), (697, 1336): ('2', 0b0010), (697, 1477): ('3', 0b0011), (697, 1633): ('A', 0b1010),
