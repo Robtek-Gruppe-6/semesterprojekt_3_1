@@ -14,9 +14,12 @@ class RobotControl():
             time.sleep(distance/self.speed)
             publish_command(0.0, 0.0)
             print(f"Published linear velocity: {distance}")
+            
         elif mode == 0b0010: #2 is turn
             publish_command(0.0, self.speed)
             time.sleep(distance/self.speed)
             publish_command(0.0, 0.0)
             print(f"Published angular velocity: {distance}")
-            
+
+
+Robot = RobotControl()

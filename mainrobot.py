@@ -6,6 +6,7 @@ from filter import fil
 from transport import flowcontrol
 from dataframer import framer
 from robotcommandlayer import presentation_layer
+from robotcontrol import robot
 
 
 
@@ -41,7 +42,12 @@ def main():
       
          command = presentation_layer.return_ack(ackchecked)
          sending_stack(command)
-            
+
+         mode, distance = presentation_layer.parse_data(data_rob)
+
+         robot.controlRobot(mode, distance)
+
+         
             #if binary_val is not None:
             #    result = datalinker.receive_data(binary_val)
             #    if result:
