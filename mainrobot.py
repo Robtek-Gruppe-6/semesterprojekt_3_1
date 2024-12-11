@@ -37,9 +37,13 @@ def main():
          print(crc)
          
          ackchecked, data_rob = flowcontrol.receiver_flowcontrol(crc, datasegment)
+
          if not ackchecked:
             continue
       
+         if not data_rob:
+            continue
+
          command = presentation_layer.return_ack(ackchecked)
          sending_stack(command)
 
