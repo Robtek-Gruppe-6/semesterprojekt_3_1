@@ -33,7 +33,6 @@ class Microphone:
     def close(self):
         self.stream.stop_stream()
         self.stream.close()
-        self.stream = None
         self.audio.terminate()
         
     
