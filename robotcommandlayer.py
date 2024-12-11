@@ -11,7 +11,7 @@ class PresentationLayer:
     def parse_data(self, data):
         n_mode = 1
 
-        mode = data[:n_mode]  # First `n_mode` nibbles
+        mode = data[0]  # First `n_mode` nibbles
         
         extended_mapping = {
             "A": 10,
