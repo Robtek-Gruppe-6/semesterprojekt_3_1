@@ -11,7 +11,7 @@ class PresentationLayer:
     def parse_data(self, data):
         n_mode = 1
 
-        mode = data[:n_mode]  # First `n_mode` nibbles
+        mode = data[0]  # First `n_mode` nibbles
         
         extended_mapping = {
             "A": 10,
@@ -28,7 +28,7 @@ class PresentationLayer:
         distance_mapped = ""
         for char in distance_hex:
             if char in extended_mapping:
-                distance_mapped += extended_mapping[char]  # Replace with mapped value
+                 distance_mapped += str(extended_mapping[char])  # Replace with mapped value
             else:
                 distance_mapped += char  # Keep numeric values as is
 
