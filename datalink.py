@@ -11,7 +11,7 @@ class Datalink():
         self.data_length = None
         
     def CRC8(self, data_bytes):
-        polynomial = 0x07 # Translates to 0000 0111 or x^3 + x^2 + x + 1
+        polynomial = 0x07 # Translates to 0000 0111 or x^2 + x^1 + x^0
         crc = 0
         for byte in data_bytes:
             crc ^= byte # XOR gate
