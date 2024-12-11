@@ -10,7 +10,7 @@ from robotcontrol import robot
 
 
 
-#from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
+from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
 
 def sending_stack(data):
       segment = flowcontrol.transmitter_add_label(data)
@@ -20,7 +20,7 @@ def sending_stack(data):
 
 
 def main():
-    #start_mqtt() #Start the MQTT client
+   start_mqtt() #Start the MQTT client
     
    try:
       for audio_chunk in micro.capture_audio():
