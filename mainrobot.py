@@ -44,7 +44,7 @@ def main():
             continue
 
          command = presentation_layer.return_ack(ackchecked)
-         time.sleep(0.5)
+         time.sleep(0.8)
          sending_stack(command)
 
          if not data_rob:
