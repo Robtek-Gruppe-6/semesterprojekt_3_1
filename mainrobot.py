@@ -46,6 +46,9 @@ def main():
          command = presentation_layer.return_ack(ackchecked)
          sending_stack(command)
 
+         if not data_rob:
+            continue
+
          mode, distance = presentation_layer.parse_data(data_rob)
 
          robot.controlRobot(mode, distance)
