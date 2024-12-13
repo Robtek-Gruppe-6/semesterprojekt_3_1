@@ -7,7 +7,7 @@ from transport import flowcontrol
 from dataframer import framer
 from robotcommandlayer import presentation_layer
 from robotcontrol import robot
-
+import time
 
 
 from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
@@ -44,6 +44,7 @@ def main():
             continue
 
          command = presentation_layer.return_ack(ackchecked)
+         time.sleep(0.5)
          sending_stack(command)
 
          if not data_rob:
