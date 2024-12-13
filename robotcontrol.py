@@ -43,7 +43,7 @@ class RobotControl():
                 self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
 
             elif mode == 'A' or mode == 'C':
-                self.commandBlockList.append((mode, distance))
+                self.commandBlockList.append((mode, distance/100))
                 print(f"Command added: mode={mode}, distance={distance}")
 
 
