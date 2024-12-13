@@ -42,9 +42,6 @@ def main():
          print (data_rob)
          if not ackchecked:
             continue
-      
-         if not data_rob:
-            continue
 
          command = presentation_layer.return_ack(ackchecked)
          sending_stack(command)
