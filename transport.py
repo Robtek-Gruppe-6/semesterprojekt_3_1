@@ -10,7 +10,7 @@ class Transport:
             self.segment = segment
             self.crc_value = crc_value
             self.prev_parity = 0
-            self.prev_lebel = 1 #Fix bug with parity
+            self.prev_lebel = 0 #Fix bug with parity
     
     #ROBOT
     def receiver_flowcontrol(self, crc, datasegment = ['0']):
@@ -26,6 +26,7 @@ class Transport:
             print("NO ACK") #debug
             return False, None
         elif(crc and parity == self.prev_parity):
+            self.prev_parity ^= 1
             self.prev_lebel = parity
             # Send ACK
             print("ACK, disc") #debug
