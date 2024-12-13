@@ -30,7 +30,7 @@ class RobotControl():
                     cmd_mode, cmd_distance = command
                     if cmd_mode == 'A': #A is drive
                         publish_command(self.speed, 0.0)
-                        time.sleep(cmd_distance/self.speed)
+                        time.sleep((cmd_distance/100)/self.speed)
                         publish_command(0.0, 0.0)
                         #print(f"Published linear velocity: {cmd_distance}")
 
@@ -46,12 +46,10 @@ class RobotControl():
                         publish_command(0.0, 0.0)
                         #print(f"Published angular velocity: {cmd_distance}")
 
-                        
-
-                self.comzmandBlockList.clear() # Outcomment this line to keep the commands in the list
+                self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
 
             elif mode != 'E':
-                self.commandBlockList.append((mode, distance/100))
+                self.commandBlockList.append((mode, distance))
                 print(f"Command added: mode={mode}, distance={distance}")
 
 
