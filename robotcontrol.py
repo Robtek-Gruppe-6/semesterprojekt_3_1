@@ -1,4 +1,5 @@
 import time
+import math
 from mqtt_pub import publish_command
 
 class RobotControl():
@@ -36,13 +37,13 @@ class RobotControl():
 
                     elif cmd_mode == 'C': #C is turn right
                         publish_command(0.0, -self.speed)
-                        time.sleep(cmd_distance/self.speed)
+                        time.sleep((cmd_distance*(math.pi/180))/self.speed)
                         publish_command(0.0, 0.0)
                         #print(f"Published angular velocity: {cmd_distance}")
                     
                     elif cmd_mode == 'D': #D is turn left
                         publish_command(0.0, self.speed)
-                        time.sleep(cmd_distance/self.speed)
+                        time.sleep((cmd_distance*(math.pi/180))/self.speed)
                         publish_command(0.0, 0.0)
                         #print(f"Published angular velocity: {cmd_distance}")
 
