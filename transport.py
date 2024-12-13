@@ -15,7 +15,7 @@ class Transport:
     #ROBOT
     def receiver_flowcontrol(self, crc, datasegment = ['0']):
             
-        parity = datasegment[0]
+        parity = int(datasegment[0])
         if((crc) and (parity != self.prev_parity)):
             self.prev_parity = parity
             print("ACK, saved") #debug
