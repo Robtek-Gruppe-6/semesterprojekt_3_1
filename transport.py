@@ -26,7 +26,7 @@ class Transport:
             print("NO ACK") #debug
             return False, None
         elif(crc and parity == self.prev_parity):
-            self.prev_parity ^= 1
+            self.prev_parity = 1 - self.prev_parity
             self.prev_lebel = parity
             # Send ACK
             print("ACK, disc") #debug
