@@ -13,6 +13,9 @@ class PresentationLayer:
 
         mode = data[0]  # First `n_mode` nibbles
         
+        if mode == 'E':
+            return mode, 0
+
         extended_mapping = {
             "A": 10,
             "B": 11,
