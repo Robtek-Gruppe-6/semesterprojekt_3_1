@@ -46,6 +46,10 @@ class RobotControl():
                         time.sleep((cmd_distance*(math.pi/180))/self.speed)
                         publish_command(0.0, 0.0)
                         #print(f"Published angular velocity: {cmd_distance}")
+                        
+                    elif cmd_mode == 'F': #F is wait
+                        publish_command(0.0, 0.0)
+                        time.sleep(cmd_distance)
 
                 self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
 
