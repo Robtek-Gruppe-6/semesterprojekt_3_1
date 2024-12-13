@@ -27,7 +27,7 @@ class Transport:
             return False, None
         elif(crc and parity == self.prev_parity):
             self.prev_parity = 1 - self.prev_parity
-            self.prev_lebel = parity
+            self.prev_lebel = 1 - self.prev_lebel
             # Send ACK
             print("ACK, disc") #debug
             return True, None
