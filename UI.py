@@ -7,7 +7,7 @@ class UI():
         print("Welcome to the Robot Control System") 
    
             
-        mode = input("Please select mode: \n1. Drive \n2. Turn \n3. Start robot\n") #Ask for mode
+        mode = input("Please select mode: \n1. Drive \n2. Turn \n3. Wait \n4. Start robot\n ") #Ask for mode
         if mode == "1":
             print("Drive mode selected")
             direction = input("Please select direction: \n1. Forward \n2. Backward \n") #Ask for direction
@@ -52,6 +52,15 @@ class UI():
             else:
                 print("Invalid input")
         if mode == "3":
+            print("Wait mode selected")
+            print("Please enter time in seconds: ")
+            distance = input()
+            print("Stacking command to wait for " + distance + " seconds")
+            self.datalist.append("F")
+            self.datalist.extend(list(distance))
+            #return self.datalist #Returns the command in the format "F" + distance
+            return False
+        if mode == "4":
             print("Starting robot")
             self.datalist.append("E")
             #return self.datalist  #Returns the command "E" to send all commands
