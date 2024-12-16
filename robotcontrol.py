@@ -28,8 +28,8 @@ class RobotControl():
 
     def controlRobot(self, mode, distance):
             if mode == 'E':
-                #reverse = self.reverseMapping(self.commandBlockList) #Virker ikke helt endnu men burde være simpelt nok at fikse lige nu laver den fejl i parity
-                #self.commandBlockList.extend(reverse)
+                reverse = self.reverseMapping(self.commandBlockList) #Virker ikke helt endnu men burde være simpelt nok at fikse lige nu laver den fejl i parity
+                self.commandBlockList.extend(reverse)
                 print(self.commandBlockList)
                 for command in self.commandBlockList:
                     cmd_mode, cmd_distance = command
@@ -60,14 +60,15 @@ class RobotControl():
                         publish_command(0.0, 0.0)
                         time.sleep(cmd_distance)
 
-                self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
+                #self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
 
             elif mode != 'E':
                 self.commandBlockList.append((mode, distance))
                 print(f"Command added: mode={mode}, distance={distance}")
                 
     def reverseMapping(self, commandList):
-        retlist = [("C", "1", "8", "0")]
+        retlist = [('C', 180)]
+        print("Initial Reverse List: ", retlist)
         for command in commandList:
             mode, distance = command
             print (mode, distance)
@@ -81,7 +82,9 @@ class RobotControl():
                 self.commandReverseBlockList.insert(0, ('C', distance))
             else:
                 self.commandReverseBlockList.insert(0, (mode, distance))
+            print("Current Reverse List: ", self.commandReverseBlockList)
         retlist.extend(self.commandReverseBlockList) 
+        print("Final Reverse List: ", retlist)
         return retlist
 
 
