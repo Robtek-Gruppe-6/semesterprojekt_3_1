@@ -47,8 +47,8 @@ class Transport:
         if crc:
             return datasegment[1:]
         elif crc == False:
-            # If there is an error, set prev_lebel to the same value to resend the same label
-            self.prev_lebel = 1 - self.prev_lebel
+            return None
+            #self.prev_lebel = 1 - self.prev_lebel
 
 
     def transmitter_add_label(self, data):
