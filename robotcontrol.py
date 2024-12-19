@@ -9,27 +9,11 @@ class RobotControl():
         self.commandBlockList = []
         self.commandReverseBlockList = []
         self.speed = 0.10
-        
-#    def controlRobot(self, mode, distance):
-#        if mode == 'E' and distance == 0:
-#            gg
-#
-#        if mode == 'A': #A is drive
-#            publish_command(self.speed, 0.0)
-#            time.sleep(distance/self.speed)
-#            publish_command(0.0, 0.0)
-#            print(f"Published linear velocity: {distance}")
-#
-#        elif mode == 'C': #2 is turn
-#            publish_command(0.0, self.speed)
-#            time.sleep(distance/self.speed)
-#            publish_command(0.0, 0.0)
-#            print(f"Published angular velocity: {distance}")
 
     def controlRobot(self, mode, distance):
             if mode == 'E':
-                reverse = self.reverseMapping(self.commandBlockList) #Virker ikke helt endnu men burde være simpelt nok at fikse lige nu laver den fejl i parity
-                self.commandBlockList.extend(reverse)
+                reverse = self.reverseMapping(self.commandBlockList) # Reverse the command list
+                self.commandBlockList.extend(reverse) # Add the reversed list to the original list
                 print(self.commandBlockList)
                 for command in self.commandBlockList:
                     cmd_mode, cmd_distance = command
@@ -37,7 +21,6 @@ class RobotControl():
                         publish_command(self.speed, 0.0)
                         time.sleep((cmd_distance/100)/self.speed)
                         publish_command(0.0, 0.0)
-                        #print(f"Published linear velocity: {cmd_distance}")
                         
                     elif cmd_mode == 'B': #B is drive backwards
                         publish_command(-self.speed, 0.0)
@@ -48,13 +31,11 @@ class RobotControl():
                         publish_command(0.0, -self.speed)
                         time.sleep((cmd_distance*(math.pi/180))/self.speed)
                         publish_command(0.0, 0.0)
-                        #print(f"Published angular velocity: {cmd_distance}")
                     
                     elif cmd_mode == 'D': #D is turn left
                         publish_command(0.0, self.speed)
                         time.sleep((cmd_distance*(math.pi/180))/self.speed)
                         publish_command(0.0, 0.0)
-                        #print(f"Published angular velocity: {cmd_distance}")
                         
                     elif cmd_mode == 'F': #F is wait
                         publish_command(0.0, 0.0)
@@ -62,7 +43,7 @@ class RobotControl():
 
                 #self.commandBlockList.clear() # Outcomment this line to keep the commands in the list
 
-            elif mode != 'E':
+            elif mode != 'E': # adds a commands to the block list
                 self.commandBlockList.append((mode, distance))
                 print(f"Command added: mode={mode}, distance={distance}")
                 

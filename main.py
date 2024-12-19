@@ -7,7 +7,6 @@ from transport import flowcontrol
 from UI import ui
 from dataframer import framer
 import time
-#from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
 
 #COMPUTER
 def listening_stack():
