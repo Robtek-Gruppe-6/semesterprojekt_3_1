@@ -2,8 +2,6 @@ import numpy as np
 import sounddevice as sd
 
 class Speaker:
-    #Class variables
-    # Sampling parameters
     sample_rate = 44100  # Standard audio sample rate (44.1 kHz)
     duration = 0.5       # Tone duration in seconds Defualt = 0.5
 
@@ -28,13 +26,12 @@ class Speaker:
     }
 
     def __init__(self, duration=None, sample_rate=None):
-        #Allow overriding defaults via initilization
         if duration:
             self.duration = duration
         if sample_rate:
             self.sample_rate = sample_rate
 
-    # Function to generate DTMF tone for a key
+    #Function to generate DTMF tone for a key
     def generate_dtmf_tone(self, key):
         if key not in self.dtmf_frequencies:
             raise ValueError(f"Invalid DTMF key: {key}")
@@ -42,12 +39,12 @@ class Speaker:
         low_freq, high_freq = self.dtmf_frequencies[key]
         t = np.linspace(0, self.duration, int(self.sample_rate * self.duration), False)
 
-        # Generate the two sine waves and sum them to create the DTMF tone
+        #Generate the two sine waves and sum them to create the DTMF tone
         tone = (np.sin(2 * np.pi * low_freq * t) + np.sin(2 * np.pi * high_freq * t)) * 1
 
-        # Apply fade-in and fade-out
-        fade_in_duration = int(self.sample_rate * 0.05)  # 50ms fade-in
-        fade_out_duration = int(self.sample_rate * 0.05)  # 50ms fade-out
+        #Apply fade-in and fade-out
+        fade_in_duration = int(self.sample_rate * 0.05)  #50ms fade-in
+        fade_out_duration = int(self.sample_rate * 0.05)  #50ms fade-out
 
         fade_in = np.linspace(0, 1, fade_in_duration)
         fade_out = np.linspace(1, 0, fade_out_duration)
@@ -57,13 +54,13 @@ class Speaker:
 
         return tone
 
-    # Function to play the DTMF tone
+    #Function to play the DTMF tone
     def play_dtmf_tone(self, key):
         tone = self.generate_dtmf_tone(key)
 
-        # Play the generated tone
+        #Play the generated tone
         sd.play(tone, self.sample_rate)
-        sd.wait()  # Wait until the tone finishes playing
+        sd.wait()  #Wait until the tone finishes playing
 
     def play_all_dtmf_tones(self):
         for key in self.dtmf_frequencies:

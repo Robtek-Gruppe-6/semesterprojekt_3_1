@@ -10,7 +10,7 @@ class Transport:
             self.segment = segment
             self.crc_value = crc_value
             self.prev_parity = 0
-            self.prev_lebel = 0 #Fix bug with parity
+            self.prev_lebel = 0
     
     #ROBOT
     def receiver_flowcontrol(self, crc, datasegment = ['0']):
@@ -18,29 +18,18 @@ class Transport:
         parity = int(datasegment[0])
         if((crc) and (parity != self.prev_parity)):
             self.prev_parity = parity
-            print("ACK, saved") #debug
+            print("ACK, saved")
             return True, datasegment[1:]
         elif(not crc):
-            #self.prev_parity = parity
-            # Send no ACK
-            print("NO ACK") #debug
+            #Send no ACK
+            print("NO ACK") 
             return False, None
         elif((crc) and (parity == self.prev_parity)):
-            #self.prev_parity = 1 - self.prev_parity
             self.prev_lebel = 1 - self.prev_lebel
-            # Send ACK
-            print("ACK, disc") #debug
+            #Send ACK
+            print("ACK, disc") 
             return True, None
-#        
-#    def transport_timer(self, capture_audio_func):
-#        start_time = time.time()
-#        while time.time() - start_time <= 5:  # 5 seconds timeout
-#            for audio_chunk in capture_audio_func():
-#                frequencies, magnitude = fil.analyze_frequency(audio_chunk)
-#                binary_value = decoder.process_chunk(frequencies, magnitude)
-#                if binary_value == "F":  # Assuming 'ACK' is the binary value for acknowledgment
-#                    return "Ack"
-#                return "Error"            
+          
 
     #Computer
     def computer_receiver_flowcontrol(self, crc, datasegment):
@@ -48,10 +37,9 @@ class Transport:
             return datasegment[1:]
         elif crc == False:
             return None
-            #self.prev_lebel = 1 - self.prev_lebel
 
 
-    def transmitter_add_label(self, data):
+    def transmitter_add_label(self, data): #Parity flipping
         new_data = []
         if(self.prev_lebel == 0):
             new_data.append("1")
@@ -65,5 +53,4 @@ class Transport:
             
         
 flowcontrol = Transport()
-    #def transmitter_flowcontrol(self,)
         
