@@ -20,14 +20,13 @@ class Dataframing():
         return hex_len
 
     def split_into_chunks(self, binary_data, chunk_size=8):
-        #print(f"data: {data}") 
-        # Pad the string with leading zeros to ensure its length is a multiple of chunk_size
+        #Pad the string with leading zeros to ensure its length is a multiple of chunk_size
         
         binary_str = ''.join(binary_data)
         
         padded_data = binary_str.zfill((len(binary_str) + chunk_size - 1) // chunk_size * chunk_size)
         
-        # Split the string into chunks of `chunk_size` characters
+        #Split the string into chunks of `chunk_size` characters
         chunks = [padded_data[i:i + chunk_size] for i in range(0, len(padded_data), chunk_size)]
 
         formatted_output = " ".join(chunks)
@@ -38,8 +37,7 @@ class Dataframing():
             data_string = self.split_into_chunks(data)
             data_bytes = bytearray.fromhex(data_string)
             crc_output = datalinker.CRC8(data_bytes)
-            #print(f"CRC output: {crc_output}")
-            crc_output_upper = crc_output.upper() #Uppercase
+            crc_output_upper = crc_output.upper()
             
             self.tones.extend(list(crc_output_upper))
             return crc_output.upper()
@@ -57,7 +55,6 @@ class Dataframing():
         self.start_sqn() 
         
         #Length
-    
         self.length_byte(binary_data)
         
         #Actual data
@@ -73,16 +70,4 @@ class Dataframing():
     
     
 
-framer = Dataframing() # Laver instans til main
-
-#testlist = ["A", "B", "C", "D", "2"]
-#testlist2 = ["A", "B", "C", "D", "2"]
-#testlist3 = "A120"
-
-#gg = framer.build_frame(testlist)
-#ggg = framer.build_frame(testlist2)
-#gggg = framer.build_frame(testlist3)
-
-#print(gg)
-#print(ggg)
-#print(gggg)
+framer = Dataframing()
