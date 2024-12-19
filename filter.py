@@ -20,15 +20,6 @@ class Filter:
         filtered_data = lfilter(b,a,data)
         return filtered_data
 
-    #Butterworth Highpass filter 
-    #def butter_highpass(data, cutoff, fs, order = 2): #2nd order?
-    #    nyquist = 0.5 * fs
-    #    high = cutoff / nyquist
-    #    b, a = butter(order, high, btype='highpass', analog=False)
-    #    filtered_data = lfilter(b,a,data)
-    #    return filtered_data
-
-
     #Frequency analysis using FFT
     def analyze_frequency(self, data):
         window = np.hamming(len(data))
