@@ -1,13 +1,10 @@
-#from control import *
 from decoding import decoder
 from filter import fil
 from speaker import spk
 from microphone import Microphone
 from datalink import datareceiver
 from transport import flowcontrol
-#from plotting import plot
 from UI import ui
-#from datalink import datalinker
 from dataframer import framer
 import time
 #from mqtt_pub import publish_command, start_mqtt, stop_mqtt #Importing the neccecary functions from mqtt_pub.py
@@ -59,13 +56,6 @@ def main():
         if loop_exit:
             break
         
-    
-    
-        
-        
-    
-    
-
 if __name__ == "__main__":
     main()
     
