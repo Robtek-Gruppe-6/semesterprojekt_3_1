@@ -68,5 +68,3 @@ class UI():
 
         
 ui = UI() 
-            
-#UI().ui()
