@@ -15,16 +15,13 @@ class Microphone:
                             frames_per_buffer=self.chunk_size)
     
     def capture_audio(self):
-        print("Listening for DTMF tones...") #måske application layer 
+        print("Listening for DTMF tones...")
         try:
             while True:
                 try:
                     self.data = np.frombuffer(self.stream.read(self.chunk_size, exception_on_overflow=False), dtype=np.int16)
                     yield self.data
-                    #print(data) #Tester hvad vi får
                 except IOError:
-
-                    # Handle buffer overflow or other I/O errors
                     continue
         finally:
             self.close()
